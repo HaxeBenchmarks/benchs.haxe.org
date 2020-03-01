@@ -2,6 +2,7 @@
 
 -lib jQueryExtern
 -lib json2object
+-lib benchmark-helper
 
 -js site/js/benchmark.js
 

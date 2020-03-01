@@ -1,0 +1,3 @@
+-D benchmark-helper=1.0.0
+# @install: lix --silent download "gh://github.com/HaxeBenchmarks/benchmark-helper#ed12bfae4818df09364d764840ead2ab4ef53e11" into benchmark-helper/1.0.0/github/ed12bfae4818df09364d764840ead2ab4ef53e11
+-cp ${HAXE_LIBCACHE}/benchmark-helper/1.0.0/github/ed12bfae4818df09364d764840ead2ab4ef53e11/src
