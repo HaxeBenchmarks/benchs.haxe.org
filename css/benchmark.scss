@@ -1,4 +1,48 @@
 
+* {
+    margin: 0;
+}
+
+nav {
+    height: 40px;
+    margin-bottom: 15px;
+
+    .navbar-inner  {
+        background: #13110f;
+        border: 0;
+        height: 40px;
+        display: flex;
+        position: fixed;
+        width: 100%;
+        align-items: center;
+
+        a {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 0 5px;
+        }
+    }
+}
+
+.content {
+
+    h1 {
+        margin: 25px 0 15px 0;
+
+    }
+
+    width: 1024px;
+    margin: 0 auto;
+
+    ul {
+        padding: 0;
+        list-style: none;
+    }
+}
+
+
 .historyLog {
     font-size: 12px;
 }
