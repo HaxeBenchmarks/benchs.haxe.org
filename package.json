@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "jquery": "",
-    "Chart.js": "2.8.0"
+    "chart.js": "2.8.0",
+    "sass": ""
   },
   "devDependencies": {
     "lix": "^15.8.5"
