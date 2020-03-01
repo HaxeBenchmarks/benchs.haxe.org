@@ -26,11 +26,43 @@ nav {
     }
 }
 
-.content {
+.benchmarkFilter {
+    border: 1px solid #c0c0c0;
+    background: #e0e0e0;
+    width: fit-content;
+    margin: 20px 5px;
+    padding: 4px;
+}
 
+.lowerValuesBetterPerformance {
+    font-weight: bold;    
+    font-size: 10px;
+}
+
+.benchmarkDescription {
+    padding: 0;
+    list-style: square;
+    li {
+        font-size: 14px;
+    }
+}
+
+.benchmarkGraphs {
+    display: flex; 
+    flex-wrap: wrap; 
+    width:100%;
+
+    canvas {
+        float:left; 
+        width: 50%; 
+        height: 400px; 
+        max-width: 50%;
+    }
+}
+
+.content {
     h1 {
         margin: 25px 0 15px 0;
-
     }
 
     width: 1024px;
@@ -41,7 +73,6 @@ nav {
         list-style: none;
     }
 }
-
 
 .historyLog {
     font-size: 12px;
