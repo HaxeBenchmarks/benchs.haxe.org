@@ -63,7 +63,7 @@ pipeline {
                 sh '''
                 cp node_modules/chart.js/dist/Chart.bundle.min.js site/js/Chart.min.js
                 cp node_modules/chart.js/dist/Chart.min.css site/css/
-                cp node_modules/jquery/dist/jquery.min.css site/js/
+                cp node_modules/jquery/dist/jquery.min.js site/js/
                 '''
 
                 echo 'Create symlinks'
