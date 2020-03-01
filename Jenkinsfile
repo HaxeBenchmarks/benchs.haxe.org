@@ -74,8 +74,8 @@ pipeline {
                 (cd site/formatter-io/js; ln -sfn ../../js/* .)
                 (cd site/formatter-io/css; ln -sfn ../../css/* .)
 
-                (cd site/formatter-io/js; ln -sfn ../../js/* .)
-                (cd site/formatter-io/css; ln -sfn ../../css/* .)
+                (cd site/formatter-noio/js; ln -sfn ../../js/* .)
+                (cd site/formatter-noio/css; ln -sfn ../../css/* .)
                 '''
             }
         }
@@ -134,7 +134,7 @@ pipeline {
             steps {
                 echo 'Install to webserver'
                 sh '''
-                rsync -au --delete site/* /var/www/benchs
+                rsync -rlu --delete site/* /var/www/benchs
                 '''
             }
         }
