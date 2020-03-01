@@ -1,0 +1,8 @@
+-cp srcPages
+
+-lib jQueryExtern
+-lib json2object
+
+-js site/js/benchmark.js
+
+-main BenchmarkJS
