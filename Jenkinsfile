@@ -68,14 +68,14 @@ pipeline {
 
                 echo 'Create symlinks'
                 sh '''
-                (cd site/alloc/js; ln -sfn ../../js/*)
-                (cd site/alloc/css; ln -sfn ../../css/*)
+                (cd site/alloc/js; ln -sfn ../../js/* .)
+                (cd site/alloc/css; ln -sfn ../../css/* .)
 
-                (cd site/formatter-io/js; ln -sfn ../../js/*)
-                (cd site/formatter-io/css; ln -sfn ../../css/*)
+                (cd site/formatter-io/js; ln -sfn ../../js/* .)
+                (cd site/formatter-io/css; ln -sfn ../../css/* .)
 
-                (cd site/formatter-io/js; ln -sfn ../../js/*)
-                (cd site/formatter-io/css; ln -sfn ../../css/*)
+                (cd site/formatter-io/js; ln -sfn ../../js/* .)
+                (cd site/formatter-io/css; ln -sfn ../../css/* .)
                 '''
             }
         }
