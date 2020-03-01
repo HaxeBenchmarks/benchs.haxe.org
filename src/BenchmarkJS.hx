@@ -290,7 +290,7 @@ class BenchmarkJS {
 				},
 				title: {
 					display: true,
-					text: "latest benchmark results"
+					text: "latest benchmark results (lower is faster)"
 				},
 				tooltips: {
 					mode: "index",
@@ -376,7 +376,7 @@ class BenchmarkJS {
 				},
 				title: {
 					display: true,
-					text: 'LInes of Code'
+					text: 'Lines of Code'
 				},
 				tooltips: {
 					mode: "index",
@@ -478,7 +478,7 @@ class BenchmarkJS {
 				},
 				title: {
 					display: true,
-					text: '$target benchmark results'
+					text: '$target benchmark results (lower is faster)'
 				},
 				tooltips: {
 					mode: "index",
