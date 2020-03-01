@@ -324,6 +324,10 @@ class BenchmarkJS {
 	}
 
 	function showLinesOfCode() {
+		if (Browser.document.getElementById("linesOfCode") == null) {
+			return;
+		}
+		
 		var inputDataset = {
 			label: "Input lines",
 			backgroundColor: "#FF6666",
