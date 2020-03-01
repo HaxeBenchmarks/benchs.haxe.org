@@ -107,5 +107,26 @@ pipeline {
                 '''
             }
         }
+
+        stage('Copy detail pages') {
+            steps {
+                echo 'Copy Formatter detail pages'
+                sh '''
+                mkdir -p formatter-bench
+                cd formatter-bench
+                svn export https://github.com/HaxeBenchmarks/formatter-benchmark/trunk/www
+                cp www/index.html ../site/formatter-io
+                cp www/indexNoIO.html ../site/formatter-noio/index.html
+                '''
+
+                echo 'Copy Alloc detail pages'
+                sh '''
+                mkdir -p alloc-bench
+                cd alloc-bench
+                svn export https://github.com/HaxeBenchmarks/alloc-benchmark/trunk/www
+                cp www/index.html ../site/alloc
+                '''
+            }
+        }
     }
 }
