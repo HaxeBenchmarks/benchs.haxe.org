@@ -9,11 +9,16 @@ pipeline {
     }
 
     stages {
-        stage('Installing NPM dependencies') {
+        stage('Installing dependencies') {
             steps {
                 echo 'installing NPM dependencies'
                 sh '''
                 npm i
+                '''
+
+                echo 'installing NPM dependencies'
+                sh '''
+                npx lix download
                 '''
             }
         }
