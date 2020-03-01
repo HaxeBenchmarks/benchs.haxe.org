@@ -5,7 +5,7 @@ pipeline {
         disableConcurrentBuilds()
     }
     triggers {
-        cron 'H H/4 * * *'
+        cron 'H H/8 * * *'
     }
 
     stages {
@@ -117,6 +117,7 @@ pipeline {
                 svn export https://github.com/HaxeBenchmarks/formatter-benchmark/trunk/www
                 cp www/index.html ../site/formatter-io
                 cp www/indexNoIO.html ../site/formatter-noio/index.html
+                rm -rf www
                 '''
 
                 echo 'Copy Alloc detail pages'
@@ -125,6 +126,15 @@ pipeline {
                 cd alloc-bench
                 svn export https://github.com/HaxeBenchmarks/alloc-benchmark/trunk/www
                 cp www/index.html ../site/alloc
+                rm -rf www
+                '''
+            }
+        }
+        stage('Install to webserver') {
+            steps {
+                echo 'Install to webserver'
+                sh '''
+                rsync -au --delete site/* /var/www/benchs
                 '''
             }
         }
