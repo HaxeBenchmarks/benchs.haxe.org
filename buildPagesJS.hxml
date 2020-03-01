@@ -1,4 +1,4 @@
--cp srcPages
+-cp src
 
 -lib jQueryExtern
 -lib json2object
