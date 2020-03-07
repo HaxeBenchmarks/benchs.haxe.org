@@ -2,3 +2,6 @@ site/js/*
 site/css/*
 node_modules
 .sass-cache
+site/alloc
+site/formatter-io
+site/formatter-noio

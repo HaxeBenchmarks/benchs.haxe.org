@@ -523,14 +523,18 @@ class BenchmarkJS {
 	function mergeTimes(datasetData:Array<HistoricalDataPoint>):Array<HistoricalDataPoint> {
 		var result:Array<HistoricalDataPoint> = [];
 		var lastDataPoint:Null<HistoricalDataPoint> = null;
+		var lastTime:Null<Float> = null;
 		for (data in datasetData) {
 			if (lastDataPoint == null) {
 				lastDataPoint = data;
+				lastTime = Date.fromString(lastDataPoint.date).getTime();
 				result.push(data);
 				continue;
 			}
-			if (lastDataPoint.date.substr(0, lastDataPoint.date.length - 2) != data.date.substr(0, data.date.length - 2)) {
+			var newTime:Float = Date.fromString(data.date).getTime();
+			if (Math.abs(newTime - lastTime) > 120 * 1000) {
 				lastDataPoint = data;
+				lastTime = newTime;
 				result.push(data);
 				continue;
 			}
