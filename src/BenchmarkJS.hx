@@ -294,7 +294,9 @@ class BenchmarkJS {
 				},
 				tooltips: {
 					mode: "index",
-					intersect: false
+					intersect: false,
+					bodyAlign: "right",
+					bodyFontFamily: "Courier"
 				},
 				hover: {
 					mode: "nearest",
@@ -380,7 +382,9 @@ class BenchmarkJS {
 				},
 				tooltips: {
 					mode: "index",
-					intersect: false
+					intersect: false,
+					bodyAlign: "right",
+					bodyFontFamily: "Courier"
 				},
 				hover: {
 					mode: "nearest",
@@ -482,7 +486,9 @@ class BenchmarkJS {
 				},
 				tooltips: {
 					mode: "index",
-					intersect: false
+					intersect: false,
+					bodyAlign: "right",
+					bodyFontFamily: "Courier"
 				},
 				hover: {
 					mode: "nearest",
@@ -569,10 +575,10 @@ class BenchmarkJS {
 	function makeGraphDatasets(target:Target):Array<GraphDatasetInfo> {
 		return [
 			makeGraphDataset(Haxe3, false, target + " (Haxe 3)", "#FF0000", "#FF0000"),
-			makeGraphDataset(Haxe3, true, target + " (Haxe 3 avg)", "#FFCCCC", "#FFCCCC"),
 			makeGraphDataset(Haxe4, false, target + " (Haxe 4)", "#0000FF", "#0000FF"),
-			makeGraphDataset(Haxe4, true, target + " (Haxe 4 avg)", "#CCCCFF", "#CCCCFF"),
 			makeGraphDataset(HaxeNightly, false, target + " (Haxe nightly)", "#66FF66", "#66FF66"),
+			makeGraphDataset(Haxe3, true, target + " (Haxe 3 avg)", "#FFCCCC", "#FFCCCC"),
+			makeGraphDataset(Haxe4, true, target + " (Haxe 4 avg)", "#CCCCFF", "#CCCCFF"),
 			makeGraphDataset(HaxeNightly, true, target + " (Haxe nightly avg)", "#CCFFCC", "#CCFFCC"),
 		];
 	}
