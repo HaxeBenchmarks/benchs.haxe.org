@@ -46,8 +46,8 @@ class FilterSettings {
 	}
 
 	function loadSettings() {
-		if (Browser.window.location.hash != null) {
-			var hash:String = Browser.window.location.hash;
+		var hash:String = Browser.window.location.hash;
+		if ((hash != null) && (hash.trim().length > 0)) {
 			if (hash.startsWith("#")) {
 				hash = hash.substr(1);
 			}
