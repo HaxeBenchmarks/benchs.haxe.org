@@ -21,7 +21,7 @@ pipeline {
                 cd node_modules/jquery-ui
                 npm i
                 npm audit fix
-                grunt requirejs uglify
+                npx grunt requirejs uglify
                 '''
 
                 echo 'installing NPM dependencies'
