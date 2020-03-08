@@ -20,6 +20,7 @@ pipeline {
                 sh '''
                 cd node_modules/jquery-ui
                 npm i
+                npm audit fix
                 grunt requirejs uglify
                 '''
 
