@@ -16,6 +16,13 @@ pipeline {
                 npm i
                 '''
 
+                echo 'build jquery-ui'
+                sh '''
+                cd node_modules/jquery-ui
+                npm i
+                grunt requirejs uglify
+                '''
+
                 echo 'installing NPM dependencies'
                 sh '''
                 npx lix download
@@ -64,6 +71,8 @@ pipeline {
                 cp node_modules/chart.js/dist/Chart.bundle.min.js site/js/Chart.min.js
                 cp node_modules/chart.js/dist/Chart.min.css site/css/
                 cp node_modules/jquery/dist/jquery.min.js site/js/
+                cp node_modules/jquery-ui/dist/jquery-ui.min.js site/js/
+                cp -vau node_modules/jquery-ui/themes site/css
                 '''
 
                 echo 'Create symlinks'

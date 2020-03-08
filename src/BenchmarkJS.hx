@@ -3,11 +3,8 @@ import js.Browser;
 import js.Syntax;
 import js.html.CanvasElement;
 import js.html.CanvasRenderingContext2D;
-import js.jquery.Event;
 import js.jquery.JQuery;
-import data.ExponentialMovingAverage;
 import data.IMovingAverage;
-import data.SimpleMovingAverage;
 import data.TestRun;
 import json2object.JsonParser;
 
@@ -19,14 +16,7 @@ class BenchmarkJS {
 	var haxe4Version:String;
 	var haxeNightlyVersion:String;
 	var documentLoaded:Bool;
-	var windowSize:Int;
-	var averageFactory:(windowSize:Int) -> IMovingAverage;
-	var showAverage:ShowAverage;
-	var withHaxe3:Bool;
-	var withHaxe4:Bool;
-	var withHaxeNightly:Bool;
-	var last20Days:Bool;
-
+	var filterSettings:FilterSettings;
 	var chartObjects:Map<String, Any>;
 
 	public static function main() {
@@ -34,6 +24,7 @@ class BenchmarkJS {
 	}
 
 	public function new() {
+		filterSettings = new FilterSettings(checkLoaded);
 		haxe3Data = null;
 		haxe4Data = null;
 		haxeNightlyData = null;
@@ -41,104 +32,12 @@ class BenchmarkJS {
 		haxe4Version = "4";
 		haxeNightlyVersion = "nightly";
 		documentLoaded = false;
-		windowSize = 6;
-		averageFactory = SimpleMovingAverage.new;
-		showAverage = DataAndAverage;
-		withHaxe3 = true;
-		withHaxe4 = true;
-		withHaxeNightly = true;
-		last20Days = true;
 		chartObjects = new Map<String, Any>();
 		requestArchivedData();
 		new JQuery(Browser.document).ready(function() {
 			documentLoaded = true;
 			checkLoaded();
 		});
-		new JQuery("#onlyAverage").change(changeOnlyAverage);
-		new JQuery("#average").change(changeAverage);
-		new JQuery("#averageWindow").change(changeAverageWindow);
-		new JQuery("#withHaxe3").change(changeWithHaxe3);
-		new JQuery("#withHaxe4").change(changeWithHaxe4);
-		new JQuery("#withHaxeNightly").change(changeWithHaxeNightly);
-		new JQuery("#last20Days").change(changeLast20Days);
-	}
-
-	function changeOnlyAverage(event:Event) {
-		var show:Bool = new JQuery("#onlyAverage").is(":checked");
-		if (show) {
-			switch (showAverage) {
-				case JustData:
-					showAverage = OnlyAverage;
-				case OnlyAverage:
-				case DataAndAverage:
-					showAverage = OnlyAverage;
-			}
-		} else {
-			switch (showAverage) {
-				case JustData:
-				case OnlyAverage:
-					showAverage = DataAndAverage;
-				case DataAndAverage:
-			}
-		}
-		showData();
-	}
-
-	function changeWithHaxe3(event:Event) {
-		withHaxe3 = new JQuery("#withHaxe3").is(":checked");
-		showData();
-	}
-
-	function changeWithHaxe4(event:Event) {
-		withHaxe4 = new JQuery("#withHaxe4").is(":checked");
-		showData();
-	}
-
-	function changeWithHaxeNightly(event:Event) {
-		withHaxeNightly = new JQuery("#withHaxeNightly").is(":checked");
-		showData();
-	}
-
-	function changeLast20Days(event:Event) {
-		last20Days = new JQuery("#last20Days").is(":checked");
-		showData();
-	}
-
-	function changeAverage(event:Event) {
-		switch (new JQuery("#average").val()) {
-			case "SMA":
-				switch (showAverage) {
-					case JustData:
-						showAverage = DataAndAverage;
-					case OnlyAverage:
-					case DataAndAverage:
-				}
-				averageFactory = SimpleMovingAverage.new;
-			case "EMA":
-				switch (showAverage) {
-					case JustData:
-						showAverage = DataAndAverage;
-					case OnlyAverage:
-					case DataAndAverage:
-				}
-				averageFactory = ExponentialMovingAverage.new;
-			default:
-				switch (showAverage) {
-					case JustData:
-					case OnlyAverage:
-						showAverage = JustData;
-					case DataAndAverage:
-						showAverage = JustData;
-				}
-				new JQuery("#onlyAverage").prop("checked", false);
-				averageFactory = SimpleMovingAverage.new;
-		}
-		showData();
-	}
-
-	function changeAverageWindow(event:Event) {
-		windowSize = Std.parseInt(new JQuery("#averageWindow").val());
-		changeAverage(event);
 	}
 
 	function requestArchivedData() {
@@ -329,7 +228,7 @@ class BenchmarkJS {
 		if (Browser.document.getElementById("linesOfCode") == null) {
 			return;
 		}
-		
+
 		var inputDataset = {
 			label: "Input lines",
 			backgroundColor: "#FF6666",
@@ -420,7 +319,7 @@ class BenchmarkJS {
 			if ((info.type == Haxe3) && (target == Jvm || target == Eval || target == NodeJsEs6)) {
 				return false;
 			}
-			switch showAverage {
+			switch (filterSettings.showAverage) {
 				case JustData:
 					if (info.movingAverage) {
 						return false;
@@ -440,22 +339,21 @@ class BenchmarkJS {
 		};
 
 		var datasetData:Array<HistoricalDataPoint> = [];
-		if (withHaxe3) {
+		if (filterSettings.withHaxe3) {
 			datasetData = datasetData.concat(collectRunData(target, haxe3Data, Haxe3));
 		}
-		if (withHaxe4) {
+		if (filterSettings.withHaxe4) {
 			datasetData = datasetData.concat(collectRunData(target, haxe4Data, Haxe4));
 		}
-		if (withHaxeNightly) {
+		if (filterSettings.withHaxeNightly) {
 			datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly));
 		}
 		datasetData.sort(sortDate);
 		datasetData = mergeTimes(datasetData);
 
 		var now:Float = Date.now().getTime();
-		now -= 20 * 24 * 60 * 60 * 1000;
 		for (item in datasetData) {
-			if (!showDate(item.date, now)) {
+			if (!showDate(item.date)) {
 				continue;
 			}
 			data.labels.push(item.date);
@@ -517,13 +415,15 @@ class BenchmarkJS {
 		Syntax.code("{0}.update()", chart);
 	}
 
-	function showDate(dateVal:String, onlyAfter:Float):Bool {
-		if (!last20Days) {
-			return true;
+	function showDate(dateVal:String):Bool {
+		var time:Float = Date.fromString(dateVal).getTime();
+		if ((filterSettings.startDate != null) && (filterSettings.startDate > time)) {
+			return false;
 		}
-		var date:Date = Date.fromString(dateVal);
-		var time:Float = date.getTime();
-		return (time > onlyAfter);
+		if ((filterSettings.endDate != null) && (filterSettings.endDate < time)) {
+			return false;
+		}
+		return true;
 	}
 
 	function mergeTimes(datasetData:Array<HistoricalDataPoint>):Array<HistoricalDataPoint> {
@@ -555,7 +455,7 @@ class BenchmarkJS {
 	}
 
 	function collectRunData(target:Target, resultsData:ArchivedResults, type:DatasetType):Array<HistoricalDataPoint> {
-		var average:IMovingAverage = averageFactory(windowSize);
+		var average:IMovingAverage = filterSettings.averageFactory(filterSettings.windowSize);
 		var datasetData:Array<HistoricalDataPoint> = [];
 		for (run in resultsData) {
 			var time:Null<Float> = getHistoryTime(run, target);
@@ -639,12 +539,6 @@ typedef HistoricalDataPoint = {
 	var time:Map<DatasetType, TimeValue>;
 	var sma:Map<DatasetType, TimeValue>;
 	var date:String;
-}
-
-enum ShowAverage {
-	JustData;
-	OnlyAverage;
-	DataAndAverage;
 }
 
 typedef GraphDatasetInfo = {
