@@ -106,7 +106,6 @@ class FilterSettings {
 					case Cpp | Csharp | Hashlink | HashlinkC | Java | Jvm | Neko | NodeJs | NodeJsEs6 | Php | Python | Eval: true;
 					default: false;
 				});
-				trace(targets);
 			}
 		}
 		updateSettings();
