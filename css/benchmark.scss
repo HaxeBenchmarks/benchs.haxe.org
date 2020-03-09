@@ -54,6 +54,20 @@ nav {
             text-align: center;
         }
     }
+    .filterAllTargets {
+        width: 10%;
+        float: left;
+        text-align: center;
+    }
+
+    .filterTargets {
+        float: left;
+        width: 90%;
+
+        li {
+            width: 10%;
+        }
+    }
 
     #averageWindow {
         width: 50px;

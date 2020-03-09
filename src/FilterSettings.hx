@@ -1,6 +1,7 @@
 import js.Browser;
 import js.jquery.Event;
 import js.jquery.JQuery;
+import BenchmarkJS.Target;
 import data.ExponentialMovingAverage;
 import data.IMovingAverage;
 import data.SimpleMovingAverage;
@@ -15,6 +16,7 @@ class FilterSettings {
 	public var withHaxeNightly:Bool;
 	public var startDate:Null<Float>;
 	public var endDate:Null<Float>;
+	public var targets:Array<Target>;
 
 	var updateGraphsCB:UpdateGraphs;
 
@@ -28,16 +30,42 @@ class FilterSettings {
 		withHaxe4 = true;
 		withHaxeNightly = true;
 		startDate = Date.now().getTime() - 20 * 24 * 60 * 60 * 1000;
+		targets = allTargets();
+
 		new JQuery("#onlyAverage").change(changeOnlyAverage);
 		new JQuery("#average").change(changeAverage);
 		new JQuery("#averageWindow").change(changeAverageWindow);
 		new JQuery("#withHaxe3").change(changeWithHaxe3);
 		new JQuery("#withHaxe4").change(changeWithHaxe4);
 		new JQuery("#withHaxeNightly").change(changeWithHaxeNightly);
+		new JQuery("#allTargets").change(changeAllTargets);
+		new JQuery("#targetCpp").change(changeTargets);
+		new JQuery("#targetCSharp").change(changeTargets);
+		new JQuery("#targetEval").change(changeTargets);
+		new JQuery("#targetHashlink").change(changeTargets);
+		new JQuery("#targetHashlinkC").change(changeTargets);
+		new JQuery("#targetJava").change(changeTargets);
+		new JQuery("#targetJvm").change(changeTargets);
+		new JQuery("#targetNeko").change(changeTargets);
+		new JQuery("#targetNodeJs").change(changeTargets);
+		new JQuery("#targetNodeJsES6").change(changeTargets);
+		new JQuery("#targetPHP").change(changeTargets);
+		new JQuery("#targetPython").change(changeTargets);
+
 		untyped new JQuery("#startDate").change(changeRange).datepicker({dateFormat: "yy-mm-dd"});
 		untyped new JQuery("#endDate").change(changeRange).datepicker({dateFormat: "yy-mm-dd"});
 		loadSettings();
 		new JQuery(Browser.window).on("hashchange", loadSettings);
+	}
+
+	public function hasTarget(target:Target):Bool {
+		return (targets.indexOf(target) >= 0);
+	}
+
+	inline function allTargets():Array<Target> {
+		return [
+			Cpp, Csharp, Eval, Hashlink, HashlinkC, Java, Jvm, Neko, NodeJs, NodeJsEs6, Php, Python
+		];
 	}
 
 	function updateGraphs() {
@@ -70,6 +98,16 @@ class FilterSettings {
 			}
 			startDate = readDateVal(settings.shift());
 			endDate = readDateVal(settings.shift());
+			var targetList:Null<String> = settings.shift();
+			if ((targetList == null) || (targetList == "all")) {
+				targets = allTargets();
+			} else {
+				targets = targetList.split(",").map(t -> cast t.urlDecode()).filter(t -> switch (t) {
+					case Cpp | Csharp | Hashlink | HashlinkC | Java | Jvm | Neko | NodeJs | NodeJsEs6 | Php | Python | Eval: true;
+					default: false;
+				});
+				trace(targets);
+			}
 		}
 		updateSettings();
 	}
@@ -92,6 +130,11 @@ class FilterSettings {
 		} else {
 			settings.push('${Date.fromTime(endDate).format("%Y-%m-%d")}');
 		}
+		if (targets.length == allTargets().length) {
+			settings.push("all");
+		} else {
+			settings.push(targets.map(t -> t.urlEncode()).join(","));
+		}
 		Browser.window.location.hash = settings.join(";");
 	}
 
@@ -110,6 +153,21 @@ class FilterSettings {
 		new JQuery("#withHaxe3").prop("checked", withHaxe3);
 		new JQuery("#withHaxe4").prop("checked", withHaxe4);
 		new JQuery("#withHaxeNightly").prop("checked", withHaxeNightly);
+
+		new JQuery("#allTargets").prop("checked", targets.length == allTargets().length);
+		new JQuery("#targetCpp").prop("checked", hasTarget(Cpp));
+		new JQuery("#targetCSharp").prop("checked", hasTarget(Csharp));
+		new JQuery("#targetEval").prop("checked", hasTarget(Eval));
+		new JQuery("#targetHashlink").prop("checked", hasTarget(Hashlink));
+		new JQuery("#targetHashlinkC").prop("checked", hasTarget(HashlinkC));
+		new JQuery("#targetJava").prop("checked", hasTarget(Java));
+		new JQuery("#targetJvm").prop("checked", hasTarget(Jvm));
+		new JQuery("#targetNeko").prop("checked", hasTarget(Neko));
+		new JQuery("#targetNodeJs").prop("checked", hasTarget(NodeJs));
+		new JQuery("#targetNodeJsES6").prop("checked", hasTarget(NodeJsEs6));
+		new JQuery("#targetPHP").prop("checked", hasTarget(Php));
+		new JQuery("#targetPython").prop("checked", hasTarget(Python));
+
 		updateDateVal("#startDate", startDate);
 		updateDateVal("#endDate", endDate);
 		updateGraphs();
@@ -209,6 +267,43 @@ class FilterSettings {
 	function changeAverageWindow(event:Event) {
 		windowSize = Std.parseInt(new JQuery("#averageWindow").val());
 		changeAverage(event);
+	}
+
+	function changeAllTargets(event:Event) {
+		if (new JQuery("#allTargets").is(":checked")) {
+			targets = allTargets();
+		}
+		updateGraphs();
+	}
+
+	function changeTargets(event:Event) {
+		var newTargets:Array<Target> = [];
+		changedTarget("#targetCpp", newTargets, Cpp);
+		changedTarget("#targetCSharp", newTargets, Csharp);
+		changedTarget("#targetEval", newTargets, Eval);
+		changedTarget("#targetHashlink", newTargets, Hashlink);
+		changedTarget("#targetHashlinkC", newTargets, HashlinkC);
+		changedTarget("#targetJava", newTargets, Java);
+		changedTarget("#targetJvm", newTargets, Jvm);
+		changedTarget("#targetNeko", newTargets, Neko);
+		changedTarget("#targetNodeJs", newTargets, NodeJs);
+		changedTarget("#targetNodeJsES6", newTargets, NodeJsEs6);
+		changedTarget("#targetPHP", newTargets, Php);
+		changedTarget("#targetPython", newTargets, Python);
+		if (newTargets.length == allTargets().length) {
+			targets = allTargets();
+			new JQuery("#allTargets").prop("checked", true);
+		} else {
+			targets = newTargets;
+			new JQuery("#allTargets").prop("checked", false);
+		}
+		updateGraphs();
+	}
+
+	function changedTarget(selector:String, newTargets:Array<Target>, target:Target) {
+		if (new JQuery(selector).is(":checked")) {
+			newTargets.push(target);
+		}
 	}
 }
 

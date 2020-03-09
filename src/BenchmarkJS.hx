@@ -38,6 +38,8 @@ class BenchmarkJS {
 			documentLoaded = true;
 			checkLoaded();
 		});
+
+		new JQuery("#linesOfCode").hide();
 	}
 
 	function requestArchivedData() {
@@ -98,7 +100,7 @@ class BenchmarkJS {
 		haxeNightlyVersion = haxeNightlyData[haxeNightlyData.length - 1].haxeVersion;
 
 		showLatest();
-		showLinesOfCode();
+		// showLinesOfCode();
 		showHistory(Cpp, "cppBenchmarks");
 		showHistory(Java, "javaBenchmarks");
 		showHistory(Jvm, "jvmBenchmarks");
@@ -117,9 +119,7 @@ class BenchmarkJS {
 		var latestHaxe3Data:TestRun = haxe3Data[haxe3Data.length - 1];
 		var latestHaxe4Data:TestRun = haxe4Data[haxe4Data.length - 1];
 		var latestHaxeNightlyData:TestRun = haxeNightlyData[haxeNightlyData.length - 1];
-		var labels:Array<String> = [
-			Cpp, Csharp, Eval, Hashlink, HashlinkC, Java, Jvm, Neko, NodeJs, NodeJsEs6, Php, Python
-		];
+		var labels:Array<String> = filterSettings.targets;
 
 		var haxe3Dataset = {
 			label: latestHaxe3Data.haxeVersion,
@@ -313,6 +313,12 @@ class BenchmarkJS {
 	}
 
 	function showHistory(target:Target, canvasId:String) {
+		if (filterSettings.hasTarget(target)) {
+			new JQuery('#$canvasId').show();
+		} else {
+			new JQuery('#$canvasId').hide();
+			return;
+		}
 		var graphDataSets:Array<GraphDatasetInfo> = makeGraphDatasets(target);
 
 		graphDataSets = graphDataSets.filter(function(info:GraphDatasetInfo):Bool {
