@@ -147,33 +147,42 @@ class BenchmarkJS {
 
 		var data = {
 			labels: labels,
-			datasets: [haxe3Dataset, haxe4Dataset, haxeNightlyDataset]
+			datasets: []
 		};
-		for (target in latestHaxe3Data.targets) {
-			var index:Int = data.labels.indexOf(target.name);
-			if (index < 0) {
-				continue;
-			}
-			switch (target.name) {
-				case Jvm | Eval | NodeJsEs6:
+		if (filterSettings.withHaxe3) {
+			data.datasets.push(haxe3Dataset);
+			for (target in latestHaxe3Data.targets) {
+				var index:Int = data.labels.indexOf(target.name);
+				if (index < 0) {
 					continue;
-				default:
+				}
+				switch (target.name) {
+					case Jvm | Eval | NodeJsEs6:
+						continue;
+					default:
+				}
+				haxe3Dataset.data[index] = target.time;
 			}
-			haxe3Dataset.data[index] = target.time;
 		}
-		for (target in latestHaxe4Data.targets) {
-			var index:Int = data.labels.indexOf(target.name);
-			if (index < 0) {
-				continue;
+		if (filterSettings.withHaxe4) {
+			data.datasets.push(haxe4Dataset);
+			for (target in latestHaxe4Data.targets) {
+				var index:Int = data.labels.indexOf(target.name);
+				if (index < 0) {
+					continue;
+				}
+				haxe4Dataset.data[index] = target.time;
 			}
-			haxe4Dataset.data[index] = target.time;
 		}
-		for (target in latestHaxeNightlyData.targets) {
-			var index:Int = data.labels.indexOf(target.name);
-			if (index < 0) {
-				continue;
+		if (filterSettings.withHaxeNightly) {
+			data.datasets.push(haxeNightlyDataset);
+			for (target in latestHaxeNightlyData.targets) {
+				var index:Int = data.labels.indexOf(target.name);
+				if (index < 0) {
+					continue;
+				}
+				haxeNightlyDataset.data[index] = target.time;
 			}
-			haxeNightlyDataset.data[index] = target.time;
 		}
 
 		var options = {
@@ -207,6 +216,9 @@ class BenchmarkJS {
 							scaleLabel: {
 								display: true,
 								labelString: "runtime in seconds"
+							},
+							ticks: {
+								beginAtZero: true
 							}
 						}
 					]
