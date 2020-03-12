@@ -42,6 +42,7 @@ pipeline {
                     mkdir -p site/alloc/$i \
                     mkdir -p site/formatter-io/$i \
                     mkdir -p site/formatter-noio/$i; \
+                    mkdir -p site/json/$i \
                 done
                 '''
             }
@@ -86,6 +87,9 @@ pipeline {
 
                 (cd site/formatter-noio/js; ln -sfn ../../js/* .)
                 (cd site/formatter-noio/css; ln -sfn ../../css/* .)
+
+                (cd site/json/js; ln -sfn ../../js/* .)
+                (cd site/json/css; ln -sfn ../../css/* .)
                 '''
             }
         }
@@ -115,6 +119,14 @@ pipeline {
                 ln -sfn /home/benchmarkdata/formatter-benchmark-noio/Haxe-4/results.json archiveHaxe4.json
                 ln -sfn /home/benchmarkdata/formatter-benchmark-noio/Haxe-nightly/results.json archiveHaxeNightly.json
                 '''
+
+                echo 'Link json data'
+                sh '''
+                cd site/json/data;
+                ln -sfn /home/benchmarkdata/json-benchmark-noio/Haxe-3/results.json archiveHaxe3.json
+                ln -sfn /home/benchmarkdata/json-benchmark-noio/Haxe-4/results.json archiveHaxe4.json
+                ln -sfn /home/benchmarkdata/json-benchmark-noio/Haxe-nightly/results.json archiveHaxeNightly.json
+                '''
             }
         }
 
@@ -136,6 +148,15 @@ pipeline {
                 cd alloc-bench
                 svn export https://github.com/HaxeBenchmarks/alloc-benchmark/trunk/www
                 cp www/index.html ../site/alloc
+                rm -rf www
+                '''
+
+                echo 'Copy Alloc detail pages'
+                sh '''
+                mkdir -p json-bench
+                cd json-bench
+                svn export https://github.com/HaxeBenchmarks/json-benchmark/trunk/www
+                cp www/index.html ../site/json
                 rm -rf www
                 '''
             }
