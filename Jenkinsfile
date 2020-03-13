@@ -39,10 +39,10 @@ pipeline {
                 mkdir -p site/css
 
                 for i in js css data; do \
-                    mkdir -p site/alloc/$i \
-                    mkdir -p site/formatter-io/$i \
+                    mkdir -p site/alloc/$i; \
+                    mkdir -p site/formatter-io/$i; \
                     mkdir -p site/formatter-noio/$i; \
-                    mkdir -p site/json/$i \
+                    mkdir -p site/json/$i; \
                 done
                 '''
             }
