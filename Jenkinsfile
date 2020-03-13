@@ -43,6 +43,8 @@ pipeline {
                     mkdir -p site/formatter-io/$i; \
                     mkdir -p site/formatter-noio/$i; \
                     mkdir -p site/json/$i; \
+                    mkdir -p site/mandelbrot/$i; \
+                    mkdir -p site/mandelbrot-anon-objects/$i; \
                 done
                 '''
             }
@@ -90,6 +92,12 @@ pipeline {
 
                 (cd site/json/js; ln -sfn ../../js/* .)
                 (cd site/json/css; ln -sfn ../../css/* .)
+
+                (cd site/mandelbrot/js; ln -sfn ../../js/* .)
+                (cd site/mandelbrot/css; ln -sfn ../../css/* .)
+
+                (cd site/mandelbrot-anon-objects/js; ln -sfn ../../js/* .)
+                (cd site/mandelbrot-anon-objects/css; ln -sfn ../../css/* .)
                 '''
             }
         }
@@ -127,6 +135,23 @@ pipeline {
                 ln -sfn /home/benchmarkdata/json-benchmark/Haxe-4/results.json archiveHaxe4.json
                 ln -sfn /home/benchmarkdata/json-benchmark/Haxe-nightly/results.json archiveHaxeNightly.json
                 '''
+
+
+                echo 'Link mandelbrot data'
+                sh '''
+                cd site/mandelbrot/data;
+                ln -sfn /home/benchmarkdata/mandelbrot-benchmark/Haxe-3/results.json archiveHaxe3.json
+                ln -sfn /home/benchmarkdata/mandelbrot-benchmark/Haxe-4/results.json archiveHaxe4.json
+                ln -sfn /home/benchmarkdata/mandelbrot-benchmark/Haxe-nightly/results.json archiveHaxeNightly.json
+                '''
+
+                echo 'Link mandelbrot-anon-objects data'
+                sh '''
+                cd site/mandelbrot-anon-objects/data;
+                ln -sfn /home/benchmarkdata/mandelbrot-benchmark-anon-objects/Haxe-3/results.json archiveHaxe3.json
+                ln -sfn /home/benchmarkdata/mandelbrot-benchmark-anon-objects/Haxe-4/results.json archiveHaxe4.json
+                ln -sfn /home/benchmarkdata/mandelbrot-benchmark-anon-objects/Haxe-nightly/results.json archiveHaxeNightly.json
+                '''
             }
         }
 
@@ -159,6 +184,17 @@ pipeline {
                 cp www/index.html ../site/json
                 rm -rf www
                 '''
+
+                echo 'Copy Alloc detail pages'
+                sh '''
+                mkdir -p json-bench
+                cd json-bench
+                svn export https://github.com/HaxeBenchmarks/mandelbrot-benchmark/trunk/www
+                cp www/index.html ../site/mandelbrot
+                cp www/indexAnonObjects.html ../site/mandelbrot-anon-objects/index.html
+                rm -rf www
+                '''
+
             }
         }
         stage('Install to webserver') {
