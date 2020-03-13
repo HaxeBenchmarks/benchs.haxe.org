@@ -123,9 +123,9 @@ pipeline {
                 echo 'Link json data'
                 sh '''
                 cd site/json/data;
-                ln -sfn /home/benchmarkdata/json-benchmark-noio/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/json-benchmark-noio/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/json-benchmark-noio/Haxe-nightly/results.json archiveHaxeNightly.json
+                ln -sfn /home/benchmarkdata/json-benchmark/Haxe-3/results.json archiveHaxe3.json
+                ln -sfn /home/benchmarkdata/json-benchmark/Haxe-4/results.json archiveHaxe4.json
+                ln -sfn /home/benchmarkdata/json-benchmark/Haxe-nightly/results.json archiveHaxeNightly.json
                 '''
             }
         }
