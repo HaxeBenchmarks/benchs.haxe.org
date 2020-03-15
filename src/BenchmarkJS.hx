@@ -541,7 +541,7 @@ class BenchmarkJS {
 @:enum
 abstract Target(String) to String {
 	var Cpp = "C++";
-	var CppGCGen = "C++ (HXCPP_GC_GENERATIONAL)";
+	var CppGCGen = "C++ (GC Gen)";
 	var Csharp = "C#";
 	var Hashlink = "Hashlink";
 	var HashlinkC = "Hashlink/C";
