@@ -40,6 +40,7 @@ class FilterSettings {
 		new JQuery("#withHaxeNightly").change(changeWithHaxeNightly);
 		new JQuery("#allTargets").change(changeAllTargets);
 		new JQuery("#targetCpp").change(changeTargets);
+		new JQuery("#targetCppGCGen").change(changeTargets);
 		new JQuery("#targetCSharp").change(changeTargets);
 		new JQuery("#targetEval").change(changeTargets);
 		new JQuery("#targetHashlink").change(changeTargets);
@@ -64,7 +65,7 @@ class FilterSettings {
 
 	inline function allTargets():Array<Target> {
 		return [
-			Cpp, Csharp, Eval, Hashlink, HashlinkC, Java, Jvm, Neko, NodeJs, NodeJsEs6, Php, Python
+			Cpp, CppGCGen, Csharp, Eval, Hashlink, HashlinkC, Java, Jvm, Neko, NodeJs, NodeJsEs6, Php, Python
 		];
 	}
 
@@ -103,7 +104,7 @@ class FilterSettings {
 				targets = allTargets();
 			} else {
 				targets = targetList.split(",").map(t -> cast t.urlDecode()).filter(t -> switch (t) {
-					case Cpp | Csharp | Hashlink | HashlinkC | Java | Jvm | Neko | NodeJs | NodeJsEs6 | Php | Python | Eval: true;
+					case Cpp | CppGCGen | Csharp | Hashlink | HashlinkC | Java | Jvm | Neko | NodeJs | NodeJsEs6 | Php | Python | Eval: true;
 					default: false;
 				});
 			}
@@ -155,6 +156,7 @@ class FilterSettings {
 
 		new JQuery("#allTargets").prop("checked", targets.length == allTargets().length);
 		new JQuery("#targetCpp").prop("checked", hasTarget(Cpp));
+		new JQuery("#targetCppGCGen").prop("checked", hasTarget(CppGCGen));
 		new JQuery("#targetCSharp").prop("checked", hasTarget(Csharp));
 		new JQuery("#targetEval").prop("checked", hasTarget(Eval));
 		new JQuery("#targetHashlink").prop("checked", hasTarget(Hashlink));
@@ -278,6 +280,7 @@ class FilterSettings {
 	function changeTargets(event:Event) {
 		var newTargets:Array<Target> = [];
 		changedTarget("#targetCpp", newTargets, Cpp);
+		changedTarget("#targetCppGCGen", newTargets, CppGCGen);
 		changedTarget("#targetCSharp", newTargets, Csharp);
 		changedTarget("#targetEval", newTargets, Eval);
 		changedTarget("#targetHashlink", newTargets, Hashlink);

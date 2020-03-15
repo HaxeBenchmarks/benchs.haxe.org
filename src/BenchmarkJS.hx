@@ -102,15 +102,16 @@ class BenchmarkJS {
 		showLatest();
 		// showLinesOfCode();
 		showHistory(Cpp, "cppBenchmarks");
+		showHistory(CppGCGen, "cppGCGenBenchmarks");
 		showHistory(Java, "javaBenchmarks");
 		showHistory(Jvm, "jvmBenchmarks");
 		showHistory(Hashlink, "hlBenchmarks");
 		showHistory(HashlinkC, "hlcBenchmarks");
-		showHistory(Csharp, "csharpBenchmarks");
 		showHistory(NodeJs, "nodeBenchmarks");
 		showHistory(NodeJsEs6, "nodeES6Benchmarks");
-		showHistory(Neko, "nekoBenchmarks");
+		showHistory(Csharp, "csharpBenchmarks");
 		showHistory(Eval, "evalBenchmarks");
+		showHistory(Neko, "nekoBenchmarks");
 		showHistory(Php, "phpBenchmarks");
 		showHistory(Python, "pythonBenchmarks");
 	}
@@ -540,6 +541,7 @@ class BenchmarkJS {
 @:enum
 abstract Target(String) to String {
 	var Cpp = "C++";
+	var CppGCGen = "C++ (HXCPP_GC_GENERATIONAL)";
 	var Csharp = "C#";
 	var Hashlink = "Hashlink";
 	var HashlinkC = "Hashlink/C";

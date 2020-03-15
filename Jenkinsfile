@@ -194,7 +194,6 @@ pipeline {
                 cp www/indexAnonObjects.html ../site/mandelbrot-anon-objects/index.html
                 rm -rf www
                 '''
-
             }
         }
         stage('Install to webserver') {
