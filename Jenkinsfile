@@ -21,7 +21,7 @@ pipeline {
                 cd node_modules/jquery-ui
                 npm i
                 npm audit fix
-                npx grunt requirejs uglify
+                npx grunt concat requirejs uglify
                 '''
 
                 echo 'installing NPM dependencies'
@@ -76,7 +76,7 @@ pipeline {
                 cp node_modules/chart.js/dist/Chart.min.css site/css/
                 cp node_modules/jquery/dist/jquery.min.js site/js/
                 cp node_modules/jquery-ui/dist/jquery-ui.min.js site/js/
-                cp -vau node_modules/jquery-ui/themes site/css
+                cp node_modules/jquery-ui/dist/jquery-ui.css site/css/
                 '''
 
                 echo 'Create symlinks'
