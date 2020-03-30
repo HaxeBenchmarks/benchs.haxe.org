@@ -77,6 +77,7 @@ pipeline {
                 cp node_modules/jquery/dist/jquery.min.js site/js/
                 cp node_modules/jquery-ui/dist/jquery-ui.min.js site/js/
                 cp node_modules/jquery-ui/dist/jquery-ui.css site/css/
+                cp -vau node_modules/jquery-ui/themes/base/images site/css/
                 '''
 
                 echo 'Create symlinks'
