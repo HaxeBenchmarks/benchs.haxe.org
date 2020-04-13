@@ -165,17 +165,17 @@ pipeline {
                 echo 'Link SHA512 data'
                 sh '''
                 cd site/sha512/data;
-                ln -sfn /home/benchmarkdata/crpyto-benchmark/SHA512/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/crpyto-benchmark/SHA512/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/crpyto-benchmark/SHA512/Haxe-nightly/results.json archiveHaxeNightly.json
+                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA512/Haxe-3/results.json archiveHaxe3.json
+                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA512/Haxe-4/results.json archiveHaxe4.json
+                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA512/Haxe-nightly/results.json archiveHaxeNightly.json
                 '''                
 
                 echo 'Link BCrypt data'
                 sh '''
                 cd site/bcrypt/data;
-                ln -sfn /home/benchmarkdata/crpyto-benchmark/BCrypt/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/crpyto-benchmark/BCrypt/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/crpyto-benchmark/BCrypt/Haxe-nightly/results.json archiveHaxeNightly.json
+                ln -sfn /home/benchmarkdata/crypto-benchmark/BCrypt/Haxe-3/results.json archiveHaxe3.json
+                ln -sfn /home/benchmarkdata/crypto-benchmark/BCrypt/Haxe-4/results.json archiveHaxe4.json
+                ln -sfn /home/benchmarkdata/crypto-benchmark/BCrypt/Haxe-nightly/results.json archiveHaxeNightly.json
                 '''                
             }
         }
@@ -225,8 +225,8 @@ pipeline {
                 mkdir -p json-bench
                 cd json-bench
                 svn export https://github.com/HaxeBenchmarks/crypto-benchmark/trunk/www
-                cp www/indexSHA512.html ../site/sha512
-                cp www/indexBCrypt.html ../site/bcrypt
+                cp www/indexSHA512.html ../site/sha512/index.html
+                cp www/indexBCrypt.html ../site/bcrypt/index.html
                 rm -rf www
                 '''                
             }
