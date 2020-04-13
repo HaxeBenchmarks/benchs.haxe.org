@@ -45,6 +45,8 @@ pipeline {
                     mkdir -p site/json/$i; \
                     mkdir -p site/mandelbrot/$i; \
                     mkdir -p site/mandelbrot-anon-objects/$i; \
+                    mkdir -p site/sha512/$i; \
+                    mkdir -p site/bcrypt/$i; \
                 done
                 '''
             }
@@ -99,6 +101,12 @@ pipeline {
 
                 (cd site/mandelbrot-anon-objects/js; ln -sfn ../../js/* .)
                 (cd site/mandelbrot-anon-objects/css; ln -sfn ../../css/* .)
+
+                (cd site/sha512/js; ln -sfn ../../js/* .)
+                (cd site/sha512/css; ln -sfn ../../css/* .)
+
+                (cd site/bcrypt/js; ln -sfn ../../js/* .)
+                (cd site/bcrypt/css; ln -sfn ../../css/* .)
                 '''
             }
         }
@@ -153,6 +161,22 @@ pipeline {
                 ln -sfn /home/benchmarkdata/mandelbrot-benchmark-anon-objects/Haxe-4/results.json archiveHaxe4.json
                 ln -sfn /home/benchmarkdata/mandelbrot-benchmark-anon-objects/Haxe-nightly/results.json archiveHaxeNightly.json
                 '''
+
+                echo 'Link SHA512 data'
+                sh '''
+                cd site/sha512/data;
+                ln -sfn /home/benchmarkdata/crpyto-benchmark/SHA512/Haxe-3/results.json archiveHaxe3.json
+                ln -sfn /home/benchmarkdata/crpyto-benchmark/SHA512/Haxe-4/results.json archiveHaxe4.json
+                ln -sfn /home/benchmarkdata/crpyto-benchmark/SHA512/Haxe-nightly/results.json archiveHaxeNightly.json
+                '''                
+
+                echo 'Link BCrypt data'
+                sh '''
+                cd site/bcrypt/data;
+                ln -sfn /home/benchmarkdata/crpyto-benchmark/BCrypt/Haxe-3/results.json archiveHaxe3.json
+                ln -sfn /home/benchmarkdata/crpyto-benchmark/BCrypt/Haxe-4/results.json archiveHaxe4.json
+                ln -sfn /home/benchmarkdata/crpyto-benchmark/BCrypt/Haxe-nightly/results.json archiveHaxeNightly.json
+                '''                
             }
         }
 
@@ -195,6 +219,16 @@ pipeline {
                 cp www/indexAnonObjects.html ../site/mandelbrot-anon-objects/index.html
                 rm -rf www
                 '''
+
+                echo 'Copy Crpyto detail pages'
+                sh '''
+                mkdir -p json-bench
+                cd json-bench
+                svn export https://github.com/HaxeBenchmarks/crypto-benchmark/trunk/www
+                cp www/indexSHA512.html ../site/sha512
+                cp www/indexBCrypt.html ../site/bcrypt
+                rm -rf www
+                '''                
             }
         }
         stage('Install to webserver') {
