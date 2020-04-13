@@ -45,6 +45,7 @@ pipeline {
                     mkdir -p site/json/$i; \
                     mkdir -p site/mandelbrot/$i; \
                     mkdir -p site/mandelbrot-anon-objects/$i; \
+                    mkdir -p site/sha256/$i; \
                     mkdir -p site/sha512/$i; \
                     mkdir -p site/bcrypt/$i; \
                 done
@@ -101,6 +102,9 @@ pipeline {
 
                 (cd site/mandelbrot-anon-objects/js; ln -sfn ../../js/* .)
                 (cd site/mandelbrot-anon-objects/css; ln -sfn ../../css/* .)
+
+                (cd site/sha256/js; ln -sfn ../../js/* .)
+                (cd site/sha256/css; ln -sfn ../../css/* .)
 
                 (cd site/sha512/js; ln -sfn ../../js/* .)
                 (cd site/sha512/css; ln -sfn ../../css/* .)
@@ -161,6 +165,14 @@ pipeline {
                 ln -sfn /home/benchmarkdata/mandelbrot-benchmark-anon-objects/Haxe-4/results.json archiveHaxe4.json
                 ln -sfn /home/benchmarkdata/mandelbrot-benchmark-anon-objects/Haxe-nightly/results.json archiveHaxeNightly.json
                 '''
+
+                echo 'Link SHA256 data'
+                sh '''
+                cd site/sha256/data;
+                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA256/Haxe-3/results.json archiveHaxe3.json
+                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA256/Haxe-4/results.json archiveHaxe4.json
+                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA256/Haxe-nightly/results.json archiveHaxeNightly.json
+                '''                
 
                 echo 'Link SHA512 data'
                 sh '''
@@ -225,6 +237,7 @@ pipeline {
                 mkdir -p json-bench
                 cd json-bench
                 svn export https://github.com/HaxeBenchmarks/crypto-benchmark/trunk/www
+                cp www/indexSHA256.html ../site/sha256/index.html
                 cp www/indexSHA512.html ../site/sha512/index.html
                 cp www/indexBCrypt.html ../site/bcrypt/index.html
                 rm -rf www
