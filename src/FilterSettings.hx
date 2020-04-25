@@ -41,6 +41,7 @@ class FilterSettings {
 		new JQuery("#allTargets").change(changeAllTargets);
 		new JQuery("#targetCpp").change(changeTargets);
 		new JQuery("#targetCppGCGen").change(changeTargets);
+		new JQuery("#targetCppia").change(changeTargets);
 		new JQuery("#targetCSharp").change(changeTargets);
 		new JQuery("#targetEval").change(changeTargets);
 		new JQuery("#targetHashlink").change(changeTargets);
@@ -52,6 +53,7 @@ class FilterSettings {
 		new JQuery("#targetNodeJsES6").change(changeTargets);
 		new JQuery("#targetPHP").change(changeTargets);
 		new JQuery("#targetPython").change(changeTargets);
+		new JQuery("#targetLua").change(changeTargets);
 
 		untyped new JQuery("#startDate").change(changeRange).datepicker({dateFormat: "yy-mm-dd"});
 		untyped new JQuery("#endDate").change(changeRange).datepicker({dateFormat: "yy-mm-dd"});
@@ -65,7 +67,7 @@ class FilterSettings {
 
 	inline function allTargets():Array<Target> {
 		return [
-			Cpp, CppGCGen, Csharp, Eval, Hashlink, HashlinkC, Java, Jvm, Neko, NodeJs, NodeJsEs6, Php, Python
+			Cpp, CppGCGen, Cppia, Csharp, Eval, Hashlink, HashlinkC, Java, Jvm, Neko, NodeJs, NodeJsEs6, Php, Python, Lua
 		];
 	}
 
@@ -104,7 +106,7 @@ class FilterSettings {
 				targets = allTargets();
 			} else {
 				targets = targetList.split(",").map(t -> cast t.urlDecode()).filter(t -> switch (t) {
-					case Cpp | CppGCGen | Csharp | Hashlink | HashlinkC | Java | Jvm | Neko | NodeJs | NodeJsEs6 | Php | Python | Eval: true;
+					case Cpp | CppGCGen | Cppia | Csharp | Hashlink | HashlinkC | Java | Jvm | Neko | NodeJs | NodeJsEs6 | Php | Python | Eval | Lua: true;
 					default: false;
 				});
 			}
@@ -157,6 +159,7 @@ class FilterSettings {
 		new JQuery("#allTargets").prop("checked", targets.length == allTargets().length);
 		new JQuery("#targetCpp").prop("checked", hasTarget(Cpp));
 		new JQuery("#targetCppGCGen").prop("checked", hasTarget(CppGCGen));
+		new JQuery("#targetCppia").prop("checked", hasTarget(Cppia));
 		new JQuery("#targetCSharp").prop("checked", hasTarget(Csharp));
 		new JQuery("#targetEval").prop("checked", hasTarget(Eval));
 		new JQuery("#targetHashlink").prop("checked", hasTarget(Hashlink));
@@ -168,6 +171,7 @@ class FilterSettings {
 		new JQuery("#targetNodeJsES6").prop("checked", hasTarget(NodeJsEs6));
 		new JQuery("#targetPHP").prop("checked", hasTarget(Php));
 		new JQuery("#targetPython").prop("checked", hasTarget(Python));
+		new JQuery("#targetLua").prop("checked", hasTarget(Lua));
 
 		updateDateVal("#startDate", startDate);
 		updateDateVal("#endDate", endDate);
@@ -281,6 +285,7 @@ class FilterSettings {
 		var newTargets:Array<Target> = [];
 		changedTarget("#targetCpp", newTargets, Cpp);
 		changedTarget("#targetCppGCGen", newTargets, CppGCGen);
+		changedTarget("#targetCppia", newTargets, Cppia);
 		changedTarget("#targetCSharp", newTargets, Csharp);
 		changedTarget("#targetEval", newTargets, Eval);
 		changedTarget("#targetHashlink", newTargets, Hashlink);
@@ -292,6 +297,7 @@ class FilterSettings {
 		changedTarget("#targetNodeJsES6", newTargets, NodeJsEs6);
 		changedTarget("#targetPHP", newTargets, Php);
 		changedTarget("#targetPython", newTargets, Python);
+		changedTarget("#targetLua", newTargets, Lua);
 		if (newTargets.length == allTargets().length) {
 			targets = allTargets();
 			new JQuery("#allTargets").prop("checked", true);

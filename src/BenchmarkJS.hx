@@ -103,6 +103,7 @@ class BenchmarkJS {
 		// showLinesOfCode();
 		showHistory(Cpp, "cppBenchmarks");
 		showHistory(CppGCGen, "cppGCGenBenchmarks");
+		showHistory(Cppia, "cppiaBenchmarks");
 		showHistory(Java, "javaBenchmarks");
 		showHistory(Jvm, "jvmBenchmarks");
 		showHistory(Hashlink, "hlBenchmarks");
@@ -114,6 +115,7 @@ class BenchmarkJS {
 		showHistory(Neko, "nekoBenchmarks");
 		showHistory(Php, "phpBenchmarks");
 		showHistory(Python, "pythonBenchmarks");
+		showHistory(Lua, "luaBenchmarks");
 	}
 
 	function showLatest() {
@@ -542,6 +544,7 @@ class BenchmarkJS {
 abstract Target(String) to String {
 	var Cpp = "C++";
 	var CppGCGen = "C++ (GC Gen)";
+	var Cppia = "Cppia";
 	var Csharp = "C#";
 	var Hashlink = "Hashlink";
 	var HashlinkC = "Hashlink/C";
@@ -553,6 +556,7 @@ abstract Target(String) to String {
 	var Php = "PHP";
 	var Python = "Python";
 	var Eval = "eval";
+	var Lua = "Lua";
 }
 
 typedef HistoricalDataPoint = {
