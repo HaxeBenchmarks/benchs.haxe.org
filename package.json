@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "chart.js": "2.8.0",
-    "jquery": "",
+    "jquery": "^3.5.0",
     "jquery-ui": "",
     "sass": ""
   },
