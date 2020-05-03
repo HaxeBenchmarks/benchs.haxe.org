@@ -5,3 +5,8 @@ node_modules
 site/alloc
 site/formatter-io
 site/formatter-noio
+cases/
+site/mandelbrot/
+site/json/
+site/formatter/
+

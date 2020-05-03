@@ -1,0 +1,9 @@
+-cp src
+
+-lib json2object
+-lib benchmark-helper
+-lib markdown
+
+-resource template/casePage.html@casePage
+
+--run DetailPages

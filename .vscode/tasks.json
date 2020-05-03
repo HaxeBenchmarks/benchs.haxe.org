@@ -15,7 +15,20 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "label": "haxe: buildPagesJS.hxml"
+        },
+        {
+            "type": "hxml",
+            "file": "buildDetailPages.hxml",
+            "problemMatcher": [
+                "$haxe-absolute",
+                "$haxe",
+                "$haxe-error",
+                "$haxe-trace"
+            ],
+            "group": "build",
+            "label": "haxe: buildDetailPages.hxml"
         }
     ]
 }
