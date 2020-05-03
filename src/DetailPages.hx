@@ -64,10 +64,10 @@ class DetailPages {
 	}
 
 	function makeDescription(benchmarkCase:String):String {
-		if (!FileSystem.exists('$benchmarkCase/README.md')) {
+		if (!FileSystem.exists('cases/$benchmarkCase/README.md')) {
 			return "";
 		}
-		return Markdown.markdownToHtml(File.getContent('$benchmarkCase/README.md'));
+		return Markdown.markdownToHtml(File.getContent('cases/$benchmarkCase/README.md'));
 	}
 
 	public static function main() {
