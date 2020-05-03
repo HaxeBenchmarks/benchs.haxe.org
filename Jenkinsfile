@@ -31,24 +31,35 @@ pipeline {
             }
         }
 
+        stage('Download benchmark-runner cases') {
+            steps {
+                echo 'Copy Formatter detail pages'
+                sh '''
+                svn export https://github.com/HaxeBenchmarks/benchmark-runner/trunk/cases
+                '''
+            }
+        }
+
         stage('Prepare site') {
             steps {
                 echo 'Preparing site folder'
                 sh '''
                 mkdir -p site/js
                 mkdir -p site/css
+                '''
+            }
+        }
 
-                for i in js css data; do \
-                    mkdir -p site/alloc/$i; \
-                    mkdir -p site/formatter-io/$i; \
-                    mkdir -p site/formatter-noio/$i; \
-                    mkdir -p site/json/$i; \
-                    mkdir -p site/mandelbrot/$i; \
-                    mkdir -p site/mandelbrot-anon-objects/$i; \
-                    mkdir -p site/sha256/$i; \
-                    mkdir -p site/sha512/$i; \
-                    mkdir -p site/bcrypt/$i; \
-                done
+        stage('Copy files to site') {
+            steps {
+                echo 'Copy NPM files'
+                sh '''
+                cp node_modules/chart.js/dist/Chart.bundle.min.js site/js/Chart.min.js
+                cp node_modules/chart.js/dist/Chart.min.css site/css/
+                cp node_modules/jquery/dist/jquery.min.js site/js/
+                cp node_modules/jquery-ui/dist/jquery-ui.min.js site/js/
+                cp node_modules/jquery-ui/dist/jquery-ui.css site/css/
+                cp -vau node_modules/jquery-ui/themes/base/images site/css/
                 '''
             }
         }
@@ -71,184 +82,20 @@ pipeline {
             }
         }
 
-        stage('Copy files to site') {
+        stage('Build Pages') {
             steps {
-                echo 'Copy NPM files'
+                echo 'Building benchmark.js'
                 sh '''
-                cp node_modules/chart.js/dist/Chart.bundle.min.js site/js/Chart.min.js
-                cp node_modules/chart.js/dist/Chart.min.css site/css/
-                cp node_modules/jquery/dist/jquery.min.js site/js/
-                cp node_modules/jquery-ui/dist/jquery-ui.min.js site/js/
-                cp node_modules/jquery-ui/dist/jquery-ui.css site/css/
-                cp -vau node_modules/jquery-ui/themes/base/images site/css/
-                '''
-
-                echo 'Create symlinks'
-                sh '''
-                (cd site/alloc/js; ln -sfn ../../js/* .)
-                (cd site/alloc/css; ln -sfn ../../css/* .)
-
-                (cd site/formatter-io/js; ln -sfn ../../js/* .)
-                (cd site/formatter-io/css; ln -sfn ../../css/* .)
-
-                (cd site/formatter-noio/js; ln -sfn ../../js/* .)
-                (cd site/formatter-noio/css; ln -sfn ../../css/* .)
-
-                (cd site/json/js; ln -sfn ../../js/* .)
-                (cd site/json/css; ln -sfn ../../css/* .)
-
-                (cd site/mandelbrot/js; ln -sfn ../../js/* .)
-                (cd site/mandelbrot/css; ln -sfn ../../css/* .)
-
-                (cd site/mandelbrot-anon-objects/js; ln -sfn ../../js/* .)
-                (cd site/mandelbrot-anon-objects/css; ln -sfn ../../css/* .)
-
-                (cd site/sha256/js; ln -sfn ../../js/* .)
-                (cd site/sha256/css; ln -sfn ../../css/* .)
-
-                (cd site/sha512/js; ln -sfn ../../js/* .)
-                (cd site/sha512/css; ln -sfn ../../css/* .)
-
-                (cd site/bcrypt/js; ln -sfn ../../js/* .)
-                (cd site/bcrypt/css; ln -sfn ../../css/* .)
+                npx haxe buildDateilPages.hxml
                 '''
             }
         }
 
-        stage('Link data to site') {
-            steps {
-                echo 'Link alloc data'
-                sh '''
-                cd site/alloc/data;
-                ln -sfn /home/benchmarkdata/alloc-benchmark/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/alloc-benchmark/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/alloc-benchmark/Haxe-nightly/results.json archiveHaxeNightly.json
-                '''
-
-                echo 'Link formatter-io data'
-                sh '''
-                cd site/formatter-io/data;
-                ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-nightly/results.json archiveHaxeNightly.json
-                '''
-
-                echo 'Link formatter-noio data'
-                sh '''
-                cd site/formatter-noio/data;
-                ln -sfn /home/benchmarkdata/formatter-benchmark-noio/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/formatter-benchmark-noio/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/formatter-benchmark-noio/Haxe-nightly/results.json archiveHaxeNightly.json
-                '''
-
-                echo 'Link json data'
-                sh '''
-                cd site/json/data;
-                ln -sfn /home/benchmarkdata/json-benchmark/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/json-benchmark/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/json-benchmark/Haxe-nightly/results.json archiveHaxeNightly.json
-                '''
-
-
-                echo 'Link mandelbrot data'
-                sh '''
-                cd site/mandelbrot/data;
-                ln -sfn /home/benchmarkdata/mandelbrot-benchmark/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/mandelbrot-benchmark/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/mandelbrot-benchmark/Haxe-nightly/results.json archiveHaxeNightly.json
-                '''
-
-                echo 'Link mandelbrot-anon-objects data'
-                sh '''
-                cd site/mandelbrot-anon-objects/data;
-                ln -sfn /home/benchmarkdata/mandelbrot-benchmark-anon-objects/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/mandelbrot-benchmark-anon-objects/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/mandelbrot-benchmark-anon-objects/Haxe-nightly/results.json archiveHaxeNightly.json
-                '''
-
-                echo 'Link SHA256 data'
-                sh '''
-                cd site/sha256/data;
-                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA256/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA256/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA256/Haxe-nightly/results.json archiveHaxeNightly.json
-                '''                
-
-                echo 'Link SHA512 data'
-                sh '''
-                cd site/sha512/data;
-                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA512/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA512/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/crypto-benchmark/SHA512/Haxe-nightly/results.json archiveHaxeNightly.json
-                '''                
-
-                echo 'Link BCrypt data'
-                sh '''
-                cd site/bcrypt/data;
-                ln -sfn /home/benchmarkdata/crypto-benchmark/BCrypt/Haxe-3/results.json archiveHaxe3.json
-                ln -sfn /home/benchmarkdata/crypto-benchmark/BCrypt/Haxe-4/results.json archiveHaxe4.json
-                ln -sfn /home/benchmarkdata/crypto-benchmark/BCrypt/Haxe-nightly/results.json archiveHaxeNightly.json
-                '''                
-            }
-        }
-
-        stage('Copy detail pages') {
-            steps {
-                echo 'Copy Formatter detail pages'
-                sh '''
-                mkdir -p formatter-bench
-                cd formatter-bench
-                svn export https://github.com/HaxeBenchmarks/formatter-benchmark/trunk/www
-                cp www/index.html ../site/formatter-io
-                cp www/indexNoIO.html ../site/formatter-noio/index.html
-                rm -rf www
-                '''
-
-                echo 'Copy Alloc detail pages'
-                sh '''
-                mkdir -p alloc-bench
-                cd alloc-bench
-                svn export https://github.com/HaxeBenchmarks/alloc-benchmark/trunk/www
-                cp www/index.html ../site/alloc
-                rm -rf www
-                '''
-
-                echo 'Copy Alloc detail pages'
-                sh '''
-                mkdir -p json-bench
-                cd json-bench
-                svn export https://github.com/HaxeBenchmarks/json-benchmark/trunk/www
-                cp www/index.html ../site/json
-                rm -rf www
-                '''
-
-                echo 'Copy Alloc detail pages'
-                sh '''
-                mkdir -p json-bench
-                cd json-bench
-                svn export https://github.com/HaxeBenchmarks/mandelbrot-benchmark/trunk/www
-                cp www/index.html ../site/mandelbrot
-                cp www/indexAnonObjects.html ../site/mandelbrot-anon-objects/index.html
-                rm -rf www
-                '''
-
-                echo 'Copy Crpyto detail pages'
-                sh '''
-                mkdir -p json-bench
-                cd json-bench
-                svn export https://github.com/HaxeBenchmarks/crypto-benchmark/trunk/www
-                cp www/indexSHA256.html ../site/sha256/index.html
-                cp www/indexSHA512.html ../site/sha512/index.html
-                cp www/indexBCrypt.html ../site/bcrypt/index.html
-                rm -rf www
-                '''                
-            }
-        }
         stage('Install to webserver') {
             steps {
                 echo 'Install to webserver'
                 sh '''
-                rsync -rlu --delete site/* /var/www/benchs
+                rsync -rlu --delete site/* $BENCHMARKS_WEBROOT
                 '''
             }
         }

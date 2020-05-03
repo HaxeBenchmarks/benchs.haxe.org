@@ -3,6 +3,7 @@ import js.Browser;
 import js.Syntax;
 import js.html.CanvasElement;
 import js.html.CanvasRenderingContext2D;
+import js.html.Element;
 import js.jquery.JQuery;
 import data.IMovingAverage;
 import data.TestRun;
@@ -43,11 +44,11 @@ class BenchmarkJS {
 	}
 
 	function requestArchivedData() {
-		var request:Http = new Http("data/archiveHaxe3.json");
+		var request:Http = new Http("data/haxe3.json");
 
 		request.onData = function(data:String) {
 			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
-			haxe3Data = parser.fromJson(data, "archiveHaxe3.json");
+			haxe3Data = parser.fromJson(data, "haxe3.json");
 			checkLoaded();
 		}
 		request.onError = function(msg:String) {
@@ -55,10 +56,10 @@ class BenchmarkJS {
 		}
 		request.request();
 
-		var request:Http = new Http("data/archiveHaxe4.json");
+		var request:Http = new Http("data/haxe4.json");
 		request.onData = function(data:String) {
 			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
-			haxe4Data = parser.fromJson(data, "archiveHaxe4.json");
+			haxe4Data = parser.fromJson(data, "haxe4.json");
 			checkLoaded();
 		}
 		request.onError = function(msg:String) {
@@ -66,10 +67,10 @@ class BenchmarkJS {
 		}
 		request.request();
 
-		var request:Http = new Http("data/archiveHaxeNightly.json");
+		var request:Http = new Http("data/haxe-nightly.json");
 		request.onData = function(data:String) {
 			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
-			haxeNightlyData = parser.fromJson(data, "archiveHaxeNightly.json");
+			haxeNightlyData = parser.fromJson(data, "haxe-nightly.json");
 			checkLoaded();
 		}
 		request.onError = function(msg:String) {
@@ -99,26 +100,16 @@ class BenchmarkJS {
 		haxe4Version = haxe4Data[haxe4Data.length - 1].haxeVersion;
 		haxeNightlyVersion = haxeNightlyData[haxeNightlyData.length - 1].haxeVersion;
 
-		showLatest();
-		// showLinesOfCode();
-		showHistory(Cpp, "cppBenchmarks");
-		showHistory(CppGCGen, "cppGCGenBenchmarks");
-		showHistory(Cppia, "cppiaBenchmarks");
-		showHistory(Java, "javaBenchmarks");
-		showHistory(Jvm, "jvmBenchmarks");
-		showHistory(Hashlink, "hlBenchmarks");
-		showHistory(HashlinkC, "hlcBenchmarks");
-		showHistory(NodeJs, "nodeBenchmarks");
-		showHistory(NodeJsEs6, "nodeES6Benchmarks");
-		showHistory(Csharp, "csharpBenchmarks");
-		showHistory(Eval, "evalBenchmarks");
-		showHistory(Neko, "nekoBenchmarks");
-		showHistory(Php, "phpBenchmarks");
-		showHistory(Python, "pythonBenchmarks");
-		showHistory(Lua, "luaBenchmarks");
+		showLatest("latestBenchmarks", "latest benchmark results (lower is faster)", (target) -> target.time);
+		showLatest("latestCompileTimes", "latest compile times (lower is faster)", (target) -> target.compileTime);
+
+		new JQuery(".targetCanvas").each(function(index:Int, element:Element) {
+			var elem:JQuery = new JQuery(element);
+			showHistory(elem.data("target"), elem.attr("id"));
+		});
 	}
 
-	function showLatest() {
+	function showLatest(chartId:String, title:String, valueCallback:(target:TargetResult) -> TimeValue) {
 		var latestHaxe3Data:TestRun = haxe3Data[haxe3Data.length - 1];
 		var latestHaxe4Data:TestRun = haxe4Data[haxe4Data.length - 1];
 		var latestHaxeNightlyData:TestRun = haxeNightlyData[haxeNightlyData.length - 1];
@@ -160,11 +151,11 @@ class BenchmarkJS {
 					continue;
 				}
 				switch (target.name) {
-					case Jvm | Eval | NodeJsEs6:
+					case Target.Jvm | Target.Eval | Target.NodeJsEs6:
 						continue;
 					default:
 				}
-				haxe3Dataset.data[index] = target.time;
+				haxe3Dataset.data[index] = valueCallback(target);
 			}
 		}
 		if (filterSettings.withHaxe4) {
@@ -174,7 +165,7 @@ class BenchmarkJS {
 				if (index < 0) {
 					continue;
 				}
-				haxe4Dataset.data[index] = target.time;
+				haxe4Dataset.data[index] = valueCallback(target);
 			}
 		}
 		if (filterSettings.withHaxeNightly) {
@@ -184,7 +175,7 @@ class BenchmarkJS {
 				if (index < 0) {
 					continue;
 				}
-				haxeNightlyDataset.data[index] = target.time;
+				haxeNightlyDataset.data[index] = valueCallback(target);
 			}
 		}
 
@@ -201,7 +192,7 @@ class BenchmarkJS {
 				},
 				title: {
 					display: true,
-					text: "latest benchmark results (lower is faster)"
+					text: title
 				},
 				tooltips: {
 					mode: "index",
@@ -228,101 +219,13 @@ class BenchmarkJS {
 				}
 			}
 		};
-		if (!chartObjects.exists("latest")) {
-			var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById("latestBenchmarks"), CanvasElement).getContext("2d");
+		if (!chartObjects.exists(chartId)) {
+			var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById(chartId), CanvasElement).getContext("2d");
 			var chart:Any = Syntax.code("new Chart({0}, {1})", ctx, options);
-			chartObjects.set("latest", chart);
+			chartObjects.set(chartId, chart);
 			return;
 		}
-		var chart:Any = chartObjects.get("latest");
-		untyped chart.data = data;
-		Syntax.code("{0}.update()", chart);
-	}
-
-	function showLinesOfCode() {
-		if (Browser.document.getElementById("linesOfCode") == null) {
-			return;
-		}
-
-		var inputDataset = {
-			label: "Input lines",
-			backgroundColor: "#FF6666",
-			borderColor: "#FF0000",
-			borderWidth: 1,
-			fill: false,
-			spanGaps: true,
-			data: []
-		};
-
-		var outputDataset = {
-			label: "Formatted lines",
-			backgroundColor: "#6666FF",
-			borderColor: "#0000FF",
-			borderWidth: 1,
-			fill: false,
-			spanGaps: true,
-			data: []
-		};
-
-		var data = {
-			labels: [],
-			datasets: [inputDataset, outputDataset]
-		};
-
-		for (run in haxe4Data) {
-			for (runTarget in run.targets) {
-				if (runTarget.name != NodeJs) {
-					continue;
-				}
-				data.labels.push(run.date);
-				inputDataset.data.push(runTarget.inputLines);
-				outputDataset.data.push(runTarget.outputLines);
-			}
-		}
-		var options = {
-			type: "line",
-			data: data,
-			options: {
-				responsive: true,
-				animation: {
-					duration: 0
-				},
-				legend: {
-					position: "top",
-				},
-				title: {
-					display: true,
-					text: 'Lines of Code'
-				},
-				tooltips: {
-					mode: "index",
-					intersect: false,
-					bodyAlign: "right",
-					bodyFontFamily: "Courier"
-				},
-				hover: {
-					mode: "nearest",
-					intersect: true
-				},
-				scales: {
-					yAxes: [
-						{
-							scaleLabel: {
-								display: true,
-								labelString: "lines of code"
-							}
-						}
-					]
-				}
-			}
-		};
-		if (!chartObjects.exists("linesOfCode")) {
-			var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById("linesOfCode"), CanvasElement).getContext("2d");
-			var chart:Any = Syntax.code("new Chart({0}, {1})", ctx, options);
-			chartObjects.set("linesOfCode", chart);
-			return;
-		}
-		var chart:Any = chartObjects.get("linesOfCode");
+		var chart:Any = chartObjects.get(chartId);
 		untyped chart.data = data;
 		Syntax.code("{0}.update()", chart);
 	}
@@ -538,25 +441,6 @@ class BenchmarkJS {
 		}
 		return null;
 	}
-}
-
-@:enum
-abstract Target(String) to String {
-	var Cpp = "C++";
-	var CppGCGen = "C++ (GC Gen)";
-	var Cppia = "Cppia";
-	var Csharp = "C#";
-	var Hashlink = "Hashlink";
-	var HashlinkC = "Hashlink/C";
-	var Java = "Java";
-	var Jvm = "JVM";
-	var Neko = "Neko";
-	var NodeJs = "NodeJS";
-	var NodeJsEs6 = "NodeJS (ES6)";
-	var Php = "PHP";
-	var Python = "Python";
-	var Eval = "eval";
-	var Lua = "Lua";
 }
 
 typedef HistoricalDataPoint = {
