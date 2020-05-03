@@ -85,7 +85,7 @@ pipeline {
             steps {
                 echo 'Building benchmark.js'
                 sh '''
-                npx haxe buildDateilPages.hxml
+                npx haxe buildDetailPages.hxml
                 '''
             }
         }
