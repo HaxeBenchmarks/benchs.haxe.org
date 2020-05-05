@@ -94,7 +94,8 @@ pipeline {
             steps {
                 echo 'Install to webserver'
                 sh '''
-                rsync -rlu --delete site/* $BENCHMARKS_WEBROOT
+                # rsync -rlu --delete site/* $BENCHMARKS_WEBROOT
+                rsync -rlu site/* $BENCHMARKS_WEBROOT
                 '''
             }
         }
