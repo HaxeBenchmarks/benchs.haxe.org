@@ -3,6 +3,17 @@
     margin: 0;
 }
 
+h1 {
+    margin: 0.5em;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #1e1e1e;
+}
+
 nav {
     height: 40px;
     margin-bottom: 15px;
@@ -18,7 +29,7 @@ nav {
 
         a {
             color: white;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
             text-decoration: none;
             padding: 0 5px;
@@ -161,19 +172,17 @@ nav {
 }
 
 .historyLog {
-    font-size: 12px;
-
+    min-width:75%;
+    
     table, td, th {
-        border-bottom: 1px solid black;
-        border-collapse: collapse;
-    }
-
-    td:first-child, th:first-child {
-        border-right: 1px solid black;
-        border-collapse: collapse;
+        border-bottom: 1px solid #ccc;
     }
 
     th {
         background-color: #d8d8d8;
+    }
+    
+    td {
+        padding:4px;   
     }
 }
