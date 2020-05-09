@@ -240,7 +240,7 @@ class BenchmarkJS {
 		var graphDataSets:Array<GraphDatasetInfo> = makeGraphDatasets(target);
 
 		graphDataSets = graphDataSets.filter(function(info:GraphDatasetInfo):Bool {
-			if ((info.type == Haxe3) && (target == Jvm || target == Eval || target == NodeJsEs6)) {
+			if (!versionSupportsTarget(info.type, target)) {
 				return false;
 			}
 			switch (filterSettings.showAverage) {
@@ -263,13 +263,13 @@ class BenchmarkJS {
 		};
 
 		var datasetData:Array<HistoricalDataPoint> = [];
-		if (filterSettings.withHaxe3) {
+		if (filterSettings.withHaxe3 && versionSupportsTarget(Haxe3, target)) {
 			datasetData = datasetData.concat(collectRunData(target, haxe3Data, Haxe3));
 		}
-		if (filterSettings.withHaxe4) {
+		if (filterSettings.withHaxe4 && versionSupportsTarget(Haxe4, target)) {
 			datasetData = datasetData.concat(collectRunData(target, haxe4Data, Haxe4));
 		}
-		if (filterSettings.withHaxeNightly) {
+		if (filterSettings.withHaxeNightly && versionSupportsTarget(HaxeNightly, target)) {
 			datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly));
 		}
 		datasetData.sort(sortDate);
@@ -337,6 +337,22 @@ class BenchmarkJS {
 		var chart:Any = chartObjects.get(target);
 		untyped chart.data = data;
 		Syntax.code("{0}.update()", chart);
+	}
+
+	function versionSupportsTarget(version:DatasetType, target:Target):Bool {
+		return switch (version) {
+			case Haxe3:
+				switch (target) {
+					case Cpp | Cppia | Csharp | Hashlink | HashlinkC | Java | Neko | NodeJs | Php | Python | Lua:
+						true;
+					case CppGCGen | HashlinkImmix | HashlinkCImmix | Jvm | NodeJsEs6 | Eval:
+						false;
+				}
+			case Haxe4:
+				true;
+			case HaxeNightly:
+				true;
+		}
 	}
 
 	function showDate(dateVal:String):Bool {
