@@ -1,4 +1,5 @@
 import js.Browser;
+import js.Cookie;
 import js.html.Element;
 import js.jquery.Event;
 import js.jquery.JQuery;
@@ -7,6 +8,8 @@ import data.IMovingAverage;
 import data.SimpleMovingAverage;
 
 class FilterSettings {
+	static inline final BENCHMARK_COOKIE:String = "BenchmarkSettings";
+
 	public var windowSize:Int;
 	public var averageFactory:(windowSize:Int) -> IMovingAverage;
 	public var showAverage:ShowAverage;
@@ -19,6 +22,7 @@ class FilterSettings {
 	public var targets:Array<Target>;
 	public var timesSelection:TimesSelection;
 
+	var defaultSettings:String;
 	var updateGraphsCB:UpdateGraphs;
 
 	public function new(updateGraphsCB:UpdateGraphs) {
@@ -33,6 +37,7 @@ class FilterSettings {
 		timesSelection = Runtime;
 		startDate = Date.now().getTime() - 20 * 24 * 60 * 60 * 1000;
 		targets = allTargets();
+		defaultSettings = buildSettingsText();
 
 		new JQuery("#onlyAverage").change(changeOnlyAverage);
 		new JQuery("#average").change(changeAverage);
@@ -60,52 +65,58 @@ class FilterSettings {
 		];
 	}
 
-	function updateGraphs() {
-		saveSettings();
+	function updateGraphs(userChange:Bool) {
+		if (userChange) {
+			saveSettings();
+		}
 		updateGraphsCB();
 	}
 
 	function loadSettings() {
 		var hash:String = Browser.window.location.hash;
-		if ((hash != null) && (hash.trim().length > 0)) {
-			if (hash.startsWith("#")) {
-				hash = hash.substr(1);
-			}
-			var settings:Array<String> = hash.split(";");
-			windowSize = Std.parseInt(settings.shift());
-			withHaxe3 = settings.shift() == "true";
-			withHaxe4 = settings.shift() == "true";
-			withHaxeNightly = settings.shift() == "true";
-			showAverage = cast settings.shift();
-			average = cast settings.shift();
-			switch (average) {
-				case None:
-					averageFactory = SimpleMovingAverage.new;
-				case Simple:
-					averageFactory = SimpleMovingAverage.new;
-				case Exponential:
-					averageFactory = ExponentialMovingAverage.new;
-				case _:
-					averageFactory = SimpleMovingAverage.new;
-			}
-			startDate = readDateVal(settings.shift());
-			endDate = readDateVal(settings.shift());
-			var targetList:Null<String> = settings.shift();
-			if ((targetList == null) || (targetList == "all")) {
-				targets = allTargets();
-			} else {
-				targets = targetList.split(",").map(t -> cast t.urlDecode()).filter(t -> switch ((t : Target)) {
-					case Cpp | CppGCGen | Cppia | Csharp | Hashlink | HashlinkC | HashlinkImmix | HashlinkCImmix | Java | Jvm | Neko | NodeJs | NodeJsEs6 |
-						Php | Python | Eval | Lua: true;
-					default: false;
-				});
-			}
-			timesSelection = cast settings.shift();
+		if ((hash == null) || (hash.trim().length <= 0)) {
+			hash = Cookie.get(BENCHMARK_COOKIE);
 		}
+		if ((hash == null) || (hash.trim().length <= 0)) {
+			hash = defaultSettings;
+		}
+		if (hash.startsWith("#")) {
+			hash = hash.substr(1);
+		}
+		var settings:Array<String> = hash.split(";");
+		windowSize = Std.parseInt(settings.shift());
+		withHaxe3 = settings.shift() == "true";
+		withHaxe4 = settings.shift() == "true";
+		withHaxeNightly = settings.shift() == "true";
+		showAverage = cast settings.shift();
+		average = cast settings.shift();
+		switch (average) {
+			case None:
+				averageFactory = SimpleMovingAverage.new;
+			case Simple:
+				averageFactory = SimpleMovingAverage.new;
+			case Exponential:
+				averageFactory = ExponentialMovingAverage.new;
+			case _:
+				averageFactory = SimpleMovingAverage.new;
+		}
+		startDate = readDateVal(settings.shift());
+		endDate = readDateVal(settings.shift());
+		var targetList:Null<String> = settings.shift();
+		if ((targetList == null) || (targetList == "all")) {
+			targets = allTargets();
+		} else {
+			targets = targetList.split(",").map(t -> cast t.urlDecode()).filter(t -> switch ((t : Target)) {
+				case Cpp | CppGCGen | Cppia | Csharp | Hashlink | HashlinkC | HashlinkImmix | HashlinkCImmix | Java | Jvm | Neko | NodeJs | NodeJsEs6 | Php |
+					Python | Eval | Lua: true;
+				default: false;
+			});
+		}
+		timesSelection = cast settings.shift();
 		updateSettings();
 	}
 
-	function saveSettings() {
+	function buildSettingsText():String {
 		var settings:Array<String> = [];
 		settings.push('$windowSize');
 		settings.push('$withHaxe3');
@@ -129,7 +140,18 @@ class FilterSettings {
 			settings.push(targets.map(t -> t.urlEncode()).join(","));
 		}
 		settings.push('$timesSelection');
-		Browser.window.location.hash = settings.join(";");
+		return settings.join(";");
+	}
+
+	function saveSettings() {
+		var settingsText:String = buildSettingsText();
+
+		if (defaultSettings == settingsText) {
+			settingsText = "";
+		}
+		Cookie.set(BENCHMARK_COOKIE, settingsText, 60 * 60 * 24 * 30, "/");
+
+		Browser.window.location.hash = settingsText;
 	}
 
 	function updateSettings() {
@@ -163,7 +185,7 @@ class FilterSettings {
 
 		updateDateVal("#startDate", startDate);
 		updateDateVal("#endDate", endDate);
-		updateGraphs();
+		updateGraphs(false);
 	}
 
 	function updateDateVal(selector:String, date:Null<Float>) {
@@ -193,28 +215,28 @@ class FilterSettings {
 				case DataAndAverage:
 			}
 		}
-		updateGraphs();
+		updateGraphs(true);
 	}
 
 	function changeWithHaxe3(event:Event) {
 		withHaxe3 = new JQuery("#withHaxe3").is(":checked");
-		updateGraphs();
+		updateGraphs(true);
 	}
 
 	function changeWithHaxe4(event:Event) {
 		withHaxe4 = new JQuery("#withHaxe4").is(":checked");
-		updateGraphs();
+		updateGraphs(true);
 	}
 
 	function changeWithHaxeNightly(event:Event) {
 		withHaxeNightly = new JQuery("#withHaxeNightly").is(":checked");
-		updateGraphs();
+		updateGraphs(true);
 	}
 
 	function changeRange(event:Event) {
 		startDate = readDateVal(new JQuery("#startDate").val());
 		endDate = readDateVal(new JQuery("#endDate").val());
-		updateGraphs();
+		updateGraphs(true);
 	}
 
 	function readDateVal(dateVal:String):Null<Float> {
@@ -254,7 +276,7 @@ class FilterSettings {
 				new JQuery("#onlyAverage").prop("checked", false);
 				averageFactory = SimpleMovingAverage.new;
 		}
-		updateGraphs();
+		updateGraphs(true);
 	}
 
 	function changeAverageWindow(event:Event) {
@@ -266,7 +288,7 @@ class FilterSettings {
 		if (new JQuery("#allTargets").is(":checked")) {
 			targets = allTargets();
 		}
-		updateGraphs();
+		updateGraphs(true);
 	}
 
 	function changeTargets(event:Event) {
@@ -285,7 +307,7 @@ class FilterSettings {
 			targets = newTargets;
 			new JQuery("#allTargets").prop("checked", false);
 		}
-		updateGraphs();
+		updateGraphs(true);
 	}
 
 	function changedTarget(selector:String, newTargets:Array<Target>, target:Target) {
@@ -296,8 +318,7 @@ class FilterSettings {
 
 	function changeTimeselection(event:Event) {
 		timesSelection = cast new JQuery(event.target).val();
-		updateGraphs();
-		Browser.window.location.reload();
+		updateGraphs(true);
 	}
 }
 

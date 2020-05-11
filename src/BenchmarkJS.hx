@@ -265,14 +265,14 @@ class BenchmarkJS {
 		var datasetData:Array<HistoricalDataPoint> = [];
 
 		var valueCallback:(times:TargetTimeValues) -> TimeValue;
-		var labelY:String;
+		var graphTitle:String;
 		switch (filterSettings.timesSelection) {
 			case Compiletime:
 				valueCallback = (times) -> times.compileTime;
-				labelY = "compile time in seconds";
+				graphTitle = "compile times";
 			case _:
 				valueCallback = (times) -> times.runtime;
-				labelY = "runtime in seconds";
+				graphTitle = "benchmark results";
 		}
 
 		if (filterSettings.withHaxe3 && versionSupportsTarget(Haxe3, target)) {
@@ -316,7 +316,7 @@ class BenchmarkJS {
 				},
 				title: {
 					display: true,
-					text: '$target benchmark results (lower is faster)'
+					text: '$target $graphTitle (lower is faster)'
 				},
 				tooltips: {
 					mode: "index",
@@ -333,7 +333,7 @@ class BenchmarkJS {
 						{
 							scaleLabel: {
 								display: true,
-								labelString: labelY
+								labelString: "times in seconds"
 							}
 						}
 					]
@@ -347,6 +347,7 @@ class BenchmarkJS {
 			return;
 		}
 		var chart:Any = chartObjects.get(target);
+		untyped chart.options = options.options;
 		untyped chart.data = data;
 		Syntax.code("{0}.update()", chart);
 	}
