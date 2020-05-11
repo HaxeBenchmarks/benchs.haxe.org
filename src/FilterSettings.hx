@@ -1,5 +1,4 @@
 import js.Browser;
-import js.Cookie;
 import js.html.Element;
 import js.jquery.Event;
 import js.jquery.JQuery;
@@ -75,7 +74,7 @@ class FilterSettings {
 	function loadSettings() {
 		var hash:String = Browser.window.location.hash;
 		if ((hash == null) || (hash.trim().length <= 0)) {
-			hash = Cookie.get(BENCHMARK_COOKIE);
+			hash = Browser.window.localStorage.getItem(BENCHMARK_COOKIE);
 		}
 		if ((hash == null) || (hash.trim().length <= 0)) {
 			hash = defaultSettings;
@@ -149,8 +148,7 @@ class FilterSettings {
 		if (defaultSettings == settingsText) {
 			settingsText = "";
 		}
-		Cookie.set(BENCHMARK_COOKIE, settingsText, 60 * 60 * 24 * 30, "/");
-
+		Browser.window.localStorage.setItem(BENCHMARK_COOKIE, settingsText);
 		Browser.window.location.hash = settingsText;
 	}
 
