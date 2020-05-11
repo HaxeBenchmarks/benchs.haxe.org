@@ -267,12 +267,12 @@ class BenchmarkJS {
 		var valueCallback:(times:TargetTimeValues) -> TimeValue;
 		var labelY:String;
 		switch (filterSettings.timesSelection) {
-			case Runtime:
-				valueCallback = (times) -> times.runtime;
-				labelY = "runtime in seconds";
 			case Compiletime:
 				valueCallback = (times) -> times.compileTime;
 				labelY = "compile time in seconds";
+			case _:
+				valueCallback = (times) -> times.runtime;
+				labelY = "runtime in seconds";
 		}
 
 		if (filterSettings.withHaxe3 && versionSupportsTarget(Haxe3, target)) {
