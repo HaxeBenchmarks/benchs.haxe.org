@@ -100,8 +100,8 @@ class BenchmarkJS {
 		haxe4Version = haxe4Data[haxe4Data.length - 1].haxeVersion;
 		haxeNightlyVersion = haxeNightlyData[haxeNightlyData.length - 1].haxeVersion;
 
-		showLatest("latestBenchmarks", "latest benchmark results (lower is faster)", (target) -> target.time);
-		showLatest("latestCompileTimes", "latest compile times (lower is faster)", (target) -> target.compileTime);
+		showLatest("latestBenchmarks", "latest benchmark results (lower is faster)", "runtime in seconds", (target) -> target.time);
+		showLatest("latestCompileTimes", "latest compile times (lower is faster)", "compile time in seconds", (target) -> target.compileTime);
 
 		new JQuery(".targetCanvas").each(function(index:Int, element:Element) {
 			var elem:JQuery = new JQuery(element);
@@ -109,7 +109,7 @@ class BenchmarkJS {
 		});
 	}
 
-	function showLatest(chartId:String, title:String, valueCallback:(target:TargetResult) -> TimeValue) {
+	function showLatest(chartId:String, title:String, labelY:String, valueCallback:(target:TargetResult) -> TimeValue) {
 		var latestHaxe3Data:TestRun = haxe3Data[haxe3Data.length - 1];
 		var latestHaxe4Data:TestRun = haxe4Data[haxe4Data.length - 1];
 		var latestHaxeNightlyData:TestRun = haxeNightlyData[haxeNightlyData.length - 1];
@@ -209,7 +209,7 @@ class BenchmarkJS {
 						{
 							scaleLabel: {
 								display: true,
-								labelString: "runtime in seconds"
+								labelString: labelY
 							},
 							ticks: {
 								beginAtZero: true
@@ -263,14 +263,26 @@ class BenchmarkJS {
 		};
 
 		var datasetData:Array<HistoricalDataPoint> = [];
+
+		var valueCallback:(times:TargetTimeValues) -> TimeValue;
+		var labelY:String;
+		switch (filterSettings.timesSelection) {
+			case Runtime:
+				valueCallback = (times) -> times.runtime;
+				labelY = "runtime in seconds";
+			case Compiletime:
+				valueCallback = (times) -> times.compileTime;
+				labelY = "compile time in seconds";
+		}
+
 		if (filterSettings.withHaxe3 && versionSupportsTarget(Haxe3, target)) {
-			datasetData = datasetData.concat(collectRunData(target, haxe3Data, Haxe3));
+			datasetData = datasetData.concat(collectRunData(target, haxe3Data, Haxe3, valueCallback));
 		}
 		if (filterSettings.withHaxe4 && versionSupportsTarget(Haxe4, target)) {
-			datasetData = datasetData.concat(collectRunData(target, haxe4Data, Haxe4));
+			datasetData = datasetData.concat(collectRunData(target, haxe4Data, Haxe4, valueCallback));
 		}
 		if (filterSettings.withHaxeNightly && versionSupportsTarget(HaxeNightly, target)) {
-			datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly));
+			datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly, valueCallback));
 		}
 		datasetData.sort(sortDate);
 		datasetData = mergeTimes(datasetData);
@@ -321,7 +333,7 @@ class BenchmarkJS {
 						{
 							scaleLabel: {
 								display: true,
-								labelString: "runtime in seconds"
+								labelString: labelY
 							}
 						}
 					]
@@ -394,14 +406,16 @@ class BenchmarkJS {
 		return result;
 	}
 
-	function collectRunData(target:Target, resultsData:ArchivedResults, type:DatasetType):Array<HistoricalDataPoint> {
+	function collectRunData(target:Target, resultsData:ArchivedResults, type:DatasetType,
+			valueCallback:(times:TargetTimeValues) -> TimeValue):Array<HistoricalDataPoint> {
 		var average:IMovingAverage = filterSettings.averageFactory(filterSettings.windowSize);
 		var datasetData:Array<HistoricalDataPoint> = [];
 		for (run in resultsData) {
-			var time:Null<Float> = getHistoryTime(run, target);
-			if (time == null) {
+			var times:Null<TargetTimeValues> = getHistoryTime(run, target);
+			if (times == null) {
 				continue;
 			}
+			var time:TimeValue = valueCallback(times);
 			average.addValue(time);
 			datasetData.push({
 				time: [type => time],
@@ -449,10 +463,10 @@ class BenchmarkJS {
 		return 0;
 	}
 
-	function getHistoryTime(testRun:TestRun, target:Target):Null<TimeValue> {
+	function getHistoryTime(testRun:TestRun, target:Target):Null<TargetTimeValues> {
 		for (runTarget in testRun.targets) {
 			if (target == runTarget.name) {
-				return runTarget.time;
+				return {runtime: runTarget.time, compileTime: runTarget.compileTime};
 			}
 		}
 		return null;
@@ -479,4 +493,9 @@ typedef GraphDataset = {
 	var fill:Bool;
 	var spanGaps:Bool;
 	var data:Array<TimeValue>;
+}
+
+typedef TargetTimeValues = {
+	var compileTime:TimeValue;
+	var runtime:TimeValue;
 }

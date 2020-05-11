@@ -17,6 +17,7 @@ class FilterSettings {
 	public var startDate:Null<Float>;
 	public var endDate:Null<Float>;
 	public var targets:Array<Target>;
+	public var timesSelection:TimesSelection;
 
 	var updateGraphsCB:UpdateGraphs;
 
@@ -29,6 +30,7 @@ class FilterSettings {
 		withHaxe3 = true;
 		withHaxe4 = true;
 		withHaxeNightly = true;
+		timesSelection = Runtime;
 		startDate = Date.now().getTime() - 20 * 24 * 60 * 60 * 1000;
 		targets = allTargets();
 
@@ -40,6 +42,7 @@ class FilterSettings {
 		new JQuery("#withHaxeNightly").change(changeWithHaxeNightly);
 		new JQuery("#allTargets").change(changeAllTargets);
 		new JQuery(".targetCheckbox").change(changeTargets);
+		new JQuery(".timesSelect").change(changeTimeselection);
 
 		untyped new JQuery("#startDate").change(changeRange).datepicker({dateFormat: "yy-mm-dd"});
 		untyped new JQuery("#endDate").change(changeRange).datepicker({dateFormat: "yy-mm-dd"});
@@ -97,6 +100,7 @@ class FilterSettings {
 					default: false;
 				});
 			}
+			timesSelection = cast settings.shift();
 		}
 		updateSettings();
 	}
@@ -124,6 +128,7 @@ class FilterSettings {
 		} else {
 			settings.push(targets.map(t -> t.urlEncode()).join(","));
 		}
+		settings.push('$timesSelection');
 		Browser.window.location.hash = settings.join(";");
 	}
 
@@ -149,6 +154,12 @@ class FilterSettings {
 			var elem:JQuery = new JQuery(element);
 			elem.prop("checked", hasTarget(elem.data("target")));
 		});
+		switch (timesSelection) {
+			case Compiletime:
+				new JQuery("#timesCompiletime").prop("checked", true);
+			case _:
+				new JQuery("#timesRuntime").prop("checked", true);
+		}
 
 		updateDateVal("#startDate", startDate);
 		updateDateVal("#endDate", endDate);
@@ -282,6 +293,12 @@ class FilterSettings {
 			newTargets.push(target);
 		}
 	}
+
+	function changeTimeselection(event:Event) {
+		timesSelection = cast new JQuery(event.target).val();
+		updateGraphs();
+		Browser.window.location.reload();
+	}
 }
 
 enum abstract ShowAverage(String) {
@@ -297,3 +314,8 @@ enum abstract AverageFunction(String) {
 }
 
 typedef UpdateGraphs = () -> Void;
+
+enum abstract TimesSelection(String) {
+	var Runtime = "runtime";
+	var Compiletime = "compiletime";
+}

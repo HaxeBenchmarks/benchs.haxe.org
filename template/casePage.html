@@ -25,15 +25,15 @@
                     <ul class="filterDatasets">
                         <li>
                             <label for="withHaxe3">Haxe 3</label><br />
-                            <input id="withHaxe3" name="withHaxe3" type="checkbox" value="true" checked>
+                            <input id="withHaxe3" name="withHaxe3" type="checkbox" value="true" checked />
                         </li>
                         <li>
                             <label for="withHaxe4">Haxe 4</label><br />
-                            <input id="withHaxe4" name="withHaxe4" type="checkbox" value="true" checked>
+                            <input id="withHaxe4" name="withHaxe4" type="checkbox" value="true" checked />
                         </li>
                         <li>
                             <label for="withHaxeNightly">Haxe nightly</label><br />
-                            <input id="withHaxeNightly" name="withHaxeNightly" type="checkbox" value="true" checked>
+                            <input id="withHaxeNightly" name="withHaxeNightly" type="checkbox" value="true" checked />
                         </li>
                     </ul>
                 </td>
@@ -52,11 +52,11 @@
                         </li>
                         <li>
                             <label for="averageWindow">window size</label><br />
-                            <input id="averageWindow" name="averageWindow" type="number" min="2" value="6">
+                            <input id="averageWindow" name="averageWindow" type="number" min="2" value="6" />
                         </li>
                         <li>
                             <label for="onlyAverage">only averages</label><br />
-                            <input id="onlyAverage" name="onlyAverage" type="checkbox" value="true">
+                            <input id="onlyAverage" name="onlyAverage" type="checkbox" value="true" />
                         </li>
                     </ul>
                 </td>
@@ -67,11 +67,11 @@
                     <ul class="filterRange">
                         <li>
                             <label for="startDate">start date</label><br />
-                            <input id="startDate" name="startDate" type="text">
+                            <input id="startDate" name="startDate" type="text" />
                         </li>
                         <li>
                             <label for="endDate">end date</label><br />
-                            <input id="endDate" name="endDate" type="text">
+                            <input id="endDate" name="endDate" type="text" />
                         </li>
                     </ul>
                 </td>
@@ -81,14 +81,29 @@
                 <td>
                     <div class="filterAllTargets">
                         <label for="allTargets">all targets</label><br />
-                        <input id="allTargets" name="allTargets" type="checkbox" value="true" checked>
+                        <input id="allTargets" name="allTargets" type="checkbox" value="true" checked />
                     </div>
                     <ul class="filterTargets">
                         ::foreach targets::<li>
                             <label for="::checkboxId::">::name::</label><br />
-                            <input id="::checkboxId::" name="::checkboxId::" data-target="::id::" data-canvas-id="::canvasId::" class="targetCheckbox" type="checkbox" value="true" checked>
+                            <input id="::checkboxId::" name="::checkboxId::" data-target="::id::" data-canvas-id="::canvasId::" class="targetCheckbox" type="checkbox" value="true" checked />
                         </li>
                         ::end::
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Time Selection</th>
+                <td>
+                    <ul class="filterTimes">
+                        <li>
+                            <label for="timesRuntime">runtime</label><br />
+                            <input id="timesRuntime" class="timesSelect" name="times" type="radio" value="runtime" />
+                        </li>
+                        <li>
+                            <label for="timesCompiletime">compile time</label><br />
+                            <input id="timesCompiletime" class="timesSelect" name="times" type="radio" value="compiletime" />
+                        </li>
                     </ul>
                 </td>
             </tr>
