@@ -160,6 +160,10 @@ nav {
 .content {
     h1 {
         margin: 25px 0 15px 0;
+
+        .benchmarkSetupInfoPage {
+            font-size: 14px;
+        }
     }
 
     width: 1024px;
@@ -169,6 +173,10 @@ nav {
         padding: 0;
         list-style: none;
     }
+
+    ul.benchmarkInfoList {
+        list-style: square;
+    }    
 }
 
 .historyLog {

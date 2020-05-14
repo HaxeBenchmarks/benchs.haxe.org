@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <title>Benchmark info page</title>
+    <link href="css/benchmark.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+    <nav class="section nav dark">
+        <div class="navbar navbar-fixed-top navbar-inverse">
+            <div class="navbar-inner">
+                <a class="brand haxe-logo" href="https://haxe.org/"><img alt="Haxe" height="21" src="https://haxe.org/img/haxe-logo-horizontal-on-dark.svg" width="107" /></a>
+                <a class="brand sub lib" href="/">&larr;&nbsp;Haxe Benchmarks</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="content">
+        <h1>Benchmarks Info Page</h1>
+        <ul class="benchmarkInfoList">
+            <li>benchmark server is an Intel(R) Xeon(R) CPU E3-1270 v6 @ 3.80GHz</li>
+            <li>benchmark runs use lix and run on Haxe 3.4.7, Haxe 4.0.5 and Haxe 4 nightly</li>
+            <li>a cron job triggers builds multiple times a day</li>
+            <li>each build job compiles Haxe formatter to C++, Cppia, C#, Hashlink, Hashlink/C, Java, JVM, eval, Neko, NodeJS, PHP, Python and Lua targets</li>
+            <li>JVM and eval are not available on Haxe 3 (Haxe 4 only)</li>
+            <li>Haxe 3 uses Hashlink 1.1, Haxe 4 Hashlink 1.11</li>
+            <li>NodeJS compilation is run twice, with and without "-D js-es=6" (Haxe 4 builds only)</li>
+            <li>C++ compilation is run twice, with and without "-D HXCPP_GC_GENERATIONAL"</li>
+            <br />
+            <li>results update after every build (page doesn't automatically reload)</li>
+            <li>sources available here: [HaxeBenchmarks/benchmark-runner](https://github.com/HaxeBenchmarks/benchmark-runner)</li>
+        </ul>
+    </div>
+</body>
+</html>
