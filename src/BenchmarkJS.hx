@@ -272,9 +272,11 @@ class BenchmarkJS {
 			case Compiletime:
 				valueCallback = (times) -> times.compileTime;
 				graphTitle = '$benchmarkName compile times';
+				new JQuery('#$canvasId').addClass("compileTimeGraph").removeClass("benchmarkGraph");
 			case _:
 				valueCallback = (times) -> times.runtime;
 				graphTitle = '$benchmarkName benchmark results';
+				new JQuery('#$canvasId').addClass("benchmarkGraph").removeClass("compileTimeGraph");
 		}
 
 		if (filterSettings.withHaxe3 && versionSupportsTarget(Haxe3, target)) {
