@@ -19,6 +19,7 @@ class BenchmarkJS {
 	var documentLoaded:Bool;
 	var filterSettings:FilterSettings;
 	var chartObjects:Map<String, Any>;
+	var benchmarkName:String;
 
 	public static function main() {
 		new BenchmarkJS();
@@ -39,6 +40,7 @@ class BenchmarkJS {
 			documentLoaded = true;
 			checkLoaded();
 		});
+		benchmarkName = Browser.window.location.pathname.split("/")[1];
 
 		new JQuery("#linesOfCode").hide();
 	}
@@ -100,8 +102,8 @@ class BenchmarkJS {
 		haxe4Version = haxe4Data[haxe4Data.length - 1].haxeVersion;
 		haxeNightlyVersion = haxeNightlyData[haxeNightlyData.length - 1].haxeVersion;
 
-		showLatest("latestBenchmarks", "latest benchmark results (lower is faster)", "runtime in seconds", (target) -> target.time);
-		showLatest("latestCompileTimes", "latest compile times (lower is faster)", "compile time in seconds", (target) -> target.compileTime);
+		showLatest("latestBenchmarks", 'latest $benchmarkName benchmark results (lower is faster)', "runtime in seconds", (target) -> target.time);
+		showLatest("latestCompileTimes", 'latest $benchmarkName compile times (lower is faster)', "compile time in seconds", (target) -> target.compileTime);
 
 		new JQuery(".targetCanvas").each(function(index:Int, element:Element) {
 			var elem:JQuery = new JQuery(element);
@@ -269,10 +271,10 @@ class BenchmarkJS {
 		switch (filterSettings.timesSelection) {
 			case Compiletime:
 				valueCallback = (times) -> times.compileTime;
-				graphTitle = "compile times";
+				graphTitle = '$benchmarkName compile times';
 			case _:
 				valueCallback = (times) -> times.runtime;
-				graphTitle = "benchmark results";
+				graphTitle = '$benchmarkName benchmark results';
 		}
 
 		if (filterSettings.withHaxe3 && versionSupportsTarget(Haxe3, target)) {
