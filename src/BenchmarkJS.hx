@@ -98,7 +98,10 @@ class BenchmarkJS {
 	}
 
 	function showData() {
-		haxe3Version = haxe3Data[haxe3Data.length - 1].haxeVersion;
+		haxe3Version = "";
+		if (haxe3Data.length > 0) {
+			haxe3Version = haxe3Data[haxe3Data.length - 1].haxeVersion;
+		}
 		haxe4Version = haxe4Data[haxe4Data.length - 1].haxeVersion;
 		haxeNightlyVersion = haxeNightlyData[haxeNightlyData.length - 1].haxeVersion;
 
@@ -112,18 +115,26 @@ class BenchmarkJS {
 	}
 
 	function showLatest(chartId:String, title:String, labelY:String, valueCallback:(target:TargetResult) -> TimeValue) {
-		var latestHaxe3Data:TestRun = haxe3Data[haxe3Data.length - 1];
+		var hasHaxe3 = (haxe3Data.length > 0);
+		var latestHaxe3Data:TestRun = null;
+		if (hasHaxe3) {
+			latestHaxe3Data = haxe3Data[haxe3Data.length - 1];
+		}
 		var latestHaxe4Data:TestRun = haxe4Data[haxe4Data.length - 1];
 		var latestHaxeNightlyData:TestRun = haxeNightlyData[haxeNightlyData.length - 1];
 		var labels:Array<String> = filterSettings.targets;
 
-		var haxe3Dataset = {
-			label: latestHaxe3Data.haxeVersion,
-			backgroundColor: "#FF6666",
-			borderColor: "#FF0000",
-			borderWidth: 1,
-			data: [for (label in labels) null]
-		};
+		var haxe3Dataset = null;
+
+		if (hasHaxe3) {
+			haxe3Dataset = {
+				label: latestHaxe3Data.haxeVersion,
+				backgroundColor: "#FF6666",
+				borderColor: "#FF0000",
+				borderWidth: 1,
+				data: [for (label in labels) null]
+			};
+		}
 
 		var haxe4Dataset = {
 			label: latestHaxe4Data.haxeVersion,
@@ -145,7 +156,7 @@ class BenchmarkJS {
 			labels: labels,
 			datasets: []
 		};
-		if (filterSettings.withHaxe3) {
+		if (hasHaxe3 && filterSettings.withHaxe3) {
 			data.datasets.push(haxe3Dataset);
 			for (target in latestHaxe3Data.targets) {
 				var index:Int = data.labels.indexOf(target.name);
@@ -241,7 +252,12 @@ class BenchmarkJS {
 		}
 		var graphDataSets:Array<GraphDatasetInfo> = makeGraphDatasets(target);
 
+		var hasHaxe3 = (haxe3Data.length > 0);
+
 		graphDataSets = graphDataSets.filter(function(info:GraphDatasetInfo):Bool {
+			if ((info.type == Haxe3) && !hasHaxe3) {
+				return false;
+			}
 			if (!versionSupportsTarget(info.type, target)) {
 				return false;
 			}
@@ -279,7 +295,7 @@ class BenchmarkJS {
 				new JQuery('#$canvasId').addClass("benchmarkGraph").removeClass("compileTimeGraph");
 		}
 
-		if (filterSettings.withHaxe3 && versionSupportsTarget(Haxe3, target)) {
+		if (hasHaxe3 && filterSettings.withHaxe3 && versionSupportsTarget(Haxe3, target)) {
 			datasetData = datasetData.concat(collectRunData(target, haxe3Data, Haxe3, valueCallback));
 		}
 		if (filterSettings.withHaxe4 && versionSupportsTarget(Haxe4, target)) {
