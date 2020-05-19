@@ -18,6 +18,10 @@ enum abstract Target(String) to String {
 	var Lua = "Lua";
 }
 
+final allTargets:Array<Target> = [
+	Cpp, CppGCGen, Cppia, Csharp, Eval, Hashlink, HashlinkC, HashlinkImmix, HashlinkCImmix, Java, Jvm, Neko, NodeJs, NodeJsEs6, Php, Python, Lua
+];
+
 abstract TargetId(Target) {
 	function new(target:Target) {
 		this = target;

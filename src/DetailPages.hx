@@ -16,15 +16,12 @@ class DetailPages {
 	}
 
 	function generatePage(benchmarkCase:String) {
+		var targetList:Array<TargetIds> = makeTargetList(Target.allTargets);
 		var context = {
 			title: 'Haxe $benchmarkCase benchmark',
 			description: makeDescription(benchmarkCase),
-			targets: makeTargetList([
-				Cpp, CppGCGen, Cppia, Csharp, Hashlink, HashlinkC, HashlinkImmix, HashlinkCImmix, Java, Jvm, Neko, NodeJs, NodeJsEs6, Php, Python, Eval, Lua
-			]),
-			canvas: makeTargetList([
-				Cpp, CppGCGen, Java, Jvm, Hashlink, HashlinkC, HashlinkImmix, HashlinkCImmix, NodeJs, NodeJsEs6, Cppia, Csharp, Neko, Eval, Php, Python, Lua
-			]),
+			targets: targetList,
+			canvas: targetList,
 		}
 		var resource:String = Resource.getString("casePage");
 		var template:Template = new Template(resource);

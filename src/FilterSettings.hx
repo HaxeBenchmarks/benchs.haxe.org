@@ -35,7 +35,7 @@ class FilterSettings {
 		withHaxeNightly = true;
 		timesSelection = Runtime;
 		startDate = Date.now().getTime() - 20 * 24 * 60 * 60 * 1000;
-		targets = allTargets();
+		targets = Target.allTargets;
 		defaultSettings = buildSettingsText();
 
 		new JQuery("#onlyAverage").change(changeOnlyAverage);
@@ -56,12 +56,6 @@ class FilterSettings {
 
 	public function hasTarget(target:Target):Bool {
 		return (targets.indexOf(target) >= 0);
-	}
-
-	inline function allTargets():Array<Target> {
-		return [
-			Cpp, CppGCGen, Cppia, Csharp, Eval, Hashlink, HashlinkC, HashlinkImmix, HashlinkCImmix, Java, Jvm, Neko, NodeJs, NodeJsEs6, Php, Python, Lua
-		];
 	}
 
 	function updateGraphs(userChange:Bool) {
@@ -103,7 +97,7 @@ class FilterSettings {
 		endDate = readDateVal(settings.shift());
 		var targetList:Null<String> = settings.shift();
 		if ((targetList == null) || (targetList == "all")) {
-			targets = allTargets();
+			targets = Target.allTargets;
 		} else {
 			targets = targetList.split(",").map(t -> cast t.urlDecode()).filter(t -> switch ((t : Target)) {
 				case Cpp | CppGCGen | Cppia | Csharp | Hashlink | HashlinkC | HashlinkImmix | HashlinkCImmix | Java | Jvm | Neko | NodeJs | NodeJsEs6 | Php |
@@ -133,7 +127,7 @@ class FilterSettings {
 		} else {
 			settings.push('${Date.fromTime(endDate).format("%Y-%m-%d")}');
 		}
-		if (targets.length == allTargets().length) {
+		if (targets.length == Target.allTargets.length) {
 			settings.push("all");
 		} else {
 			settings.push(targets.map(t -> t.urlEncode()).join(","));
@@ -168,7 +162,7 @@ class FilterSettings {
 		new JQuery("#withHaxe4").prop("checked", withHaxe4);
 		new JQuery("#withHaxeNightly").prop("checked", withHaxeNightly);
 
-		new JQuery("#allTargets").prop("checked", targets.length == allTargets().length);
+		new JQuery("#allTargets").prop("checked", targets.length == Target.allTargets.length);
 
 		new JQuery(".targetCheckbox").each(function(index:Int, element:Element) {
 			var elem:JQuery = new JQuery(element);
@@ -284,7 +278,7 @@ class FilterSettings {
 
 	function changeAllTargets(event:Event) {
 		if (new JQuery("#allTargets").is(":checked")) {
-			targets = allTargets();
+			targets = Target.allTargets;
 		}
 		updateGraphs(true);
 	}
@@ -298,11 +292,11 @@ class FilterSettings {
 			}
 		});
 
-		if (newTargets.length == allTargets().length) {
-			targets = allTargets();
+		targets = Target.allTargets.filter(t -> newTargets.contains(t));
+
+		if (targets.length == Target.allTargets.length) {
 			new JQuery("#allTargets").prop("checked", true);
 		} else {
-			targets = newTargets;
 			new JQuery("#allTargets").prop("checked", false);
 		}
 		updateGraphs(true);
