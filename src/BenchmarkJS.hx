@@ -454,7 +454,7 @@ class BenchmarkJS {
 			makeGraphDataset(HaxeNightly, false, target + " (Haxe nightly)", "#66FF66", "#66FF66"),
 			makeGraphDataset(Haxe3, true, target + " (Haxe 3 avg)", "#FFCCCC", "#FFCCCC"),
 			makeGraphDataset(Haxe4, true, target + " (Haxe 4 avg)", "#CCCCFF", "#CCCCFF"),
-			makeGraphDataset(HaxeNightly, true, target + " (Haxe nightly avg)", "#CCFFCC", "#CCFFCC"),
+			makeGraphDataset(HaxeNightly, true, target + " (Haxe nightly avg)", "#88FFCC", "#88FFCC"),
 		];
 	}
 
