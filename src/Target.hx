@@ -19,7 +19,7 @@ enum abstract Target(String) to String {
 }
 
 final allTargets:Array<Target> = [
-	Cpp, CppGCGen, Cppia, Csharp, Eval, Hashlink, HashlinkC, HashlinkImmix, HashlinkCImmix, Java, Jvm, Neko, NodeJs, NodeJsEs6, Php, Python, Lua
+	Cpp, CppGCGen, Cppia, Csharp, Hashlink, HashlinkC, HashlinkImmix, HashlinkCImmix, Java, Jvm, Eval, Neko, NodeJs, NodeJsEs6, Php, Python, Lua
 ];
 
 abstract TargetId(Target) {
