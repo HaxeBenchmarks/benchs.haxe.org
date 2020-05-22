@@ -16,10 +16,11 @@ enum abstract Target(String) to String {
 	var Python = "Python";
 	var Eval = "Eval";
 	var Lua = "Lua";
+	var Luajit = "Luajit";
 }
 
 final allTargets:Array<Target> = [
-	Cpp, CppGCGen, Cppia, Csharp, Hashlink, HashlinkC, HashlinkImmix, HashlinkCImmix, Java, Jvm, Eval, Neko, NodeJs, NodeJsEs6, Php, Python, Lua
+	Cpp, CppGCGen, Cppia, Csharp, Hashlink, HashlinkC, HashlinkImmix, HashlinkCImmix, Java, Jvm, Eval, Neko, NodeJs, NodeJsEs6, Php, Python, Lua, Luajit
 ];
 
 abstract TargetId(Target) {
