@@ -80,8 +80,14 @@
                 <th>Targets</th>
                 <td>
                     <div class="filterAllTargets">
-                        <label for="allTargets">all targets</label><br />
-                        <input id="allTargets" name="allTargets" type="checkbox" value="true" checked />
+                        <div>
+                            <label for="allTargets">select all</label><br />
+                            <input id="allTargets" name="allTargets" type="checkbox" value="true" checked />
+                        </div>
+                        <div>
+                            <label for="noTargets">deselect all</label><br />
+                            <input id="noTargets" name="noTargets" type="checkbox" value="true" />
+                        </div>
                     </div>
                     <ul class="filterTargets">
                         ::foreach targets::<li>
@@ -121,6 +127,10 @@
         <tr>
             <th>date</th>
             <th>what</th>
+        </tr>
+        <tr>
+            <td>2020-05-22 22:00:00</td>
+            <td>added luajit<br/>downgraded lua 5.2 to lua 5.1</td>
         </tr>
         <tr>
             <td>2020-05-17 21:00:00</td>

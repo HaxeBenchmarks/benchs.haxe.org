@@ -45,6 +45,7 @@ class FilterSettings {
 		new JQuery("#withHaxe4").change(changeWithHaxe4);
 		new JQuery("#withHaxeNightly").change(changeWithHaxeNightly);
 		new JQuery("#allTargets").change(changeAllTargets);
+		new JQuery("#noTargets").change(changeNoTargets);
 		new JQuery(".targetCheckbox").change(changeTargets);
 		new JQuery(".timesSelect").change(changeTimeselection);
 
@@ -163,6 +164,7 @@ class FilterSettings {
 		new JQuery("#withHaxeNightly").prop("checked", withHaxeNightly);
 
 		new JQuery("#allTargets").prop("checked", targets.length == Target.allTargets.length);
+		new JQuery("#noTargets").prop("checked", targets.length == 0);
 
 		new JQuery(".targetCheckbox").each(function(index:Int, element:Element) {
 			var elem:JQuery = new JQuery(element);
@@ -283,6 +285,13 @@ class FilterSettings {
 		updateGraphs(true);
 	}
 
+	function changeNoTargets(event:Event) {
+		if (new JQuery("#noTargets").is(":checked")) {
+			targets = [];
+		}
+		updateGraphs(true);
+	}
+
 	function changeTargets(event:Event) {
 		var newTargets:Array<Target> = [];
 		new JQuery(".targetCheckbox").each(function(index:Int, element:Element) {
@@ -296,7 +305,13 @@ class FilterSettings {
 
 		if (targets.length == Target.allTargets.length) {
 			new JQuery("#allTargets").prop("checked", true);
+			new JQuery("#noTargets").prop("checked", false);
 		} else {
+			if (targets.length == 0) {
+				new JQuery("#noTargets").prop("checked", true);
+			} else {
+				new JQuery("#noTargets").prop("checked", false);
+			}
 			new JQuery("#allTargets").prop("checked", false);
 		}
 		updateGraphs(true);
