@@ -5,6 +5,7 @@ import js.html.CanvasElement;
 import js.html.CanvasRenderingContext2D;
 import js.html.Element;
 import js.jquery.JQuery;
+import Target.allTargets;
 import data.IMovingAverage;
 import data.TestRun;
 import json2object.JsonParser;
@@ -105,6 +106,7 @@ class BenchmarkJS {
 		haxe4Version = haxe4Data[haxe4Data.length - 1].haxeVersion;
 		haxeNightlyVersion = haxeNightlyData[haxeNightlyData.length - 1].haxeVersion;
 
+		buildIssueLists();
 		showLatest("latestBenchmarks", 'latest $benchmarkName benchmark results (lower is faster)', "runtime in seconds", (target) -> target.time);
 		showLatest("latestCompileTimes", 'latest $benchmarkName compile times (lower is faster)', "compile time in seconds", (target) -> target.compileTime);
 
@@ -112,6 +114,52 @@ class BenchmarkJS {
 			var elem:JQuery = new JQuery(element);
 			showHistory(elem.data("target"), elem.attr("id"));
 		});
+	}
+
+	function buildIssueLists() {
+		var showIssues:(issues:String, id:String) -> Void = function(issues:String, id:String) {
+			if (issues.length <= 0) {
+				new JQuery('#$id').hide();
+				new JQuery('#$id span').text("");
+			} else {
+				new JQuery('#$id').show();
+				new JQuery('#$id span').text(issues);
+			}
+		};
+
+		var issues:String = buildIssueList(haxe3Data, Haxe3);
+		showIssues(buildIssueList(haxe3Data, Haxe3), "haxe3Issues");
+		showIssues(buildIssueList(haxe4Data, Haxe4), "haxe4Issues");
+		showIssues(buildIssueList(haxeNightlyData, HaxeNightly), "haxeNightlyIssues");
+	}
+
+	function buildIssueList(data:Null<ArchivedResults>, version:DatasetType):String {
+		var run:TestRun;
+		if ((data == null) || (data.length <= 0)) {
+			return "no benchmark data";
+		}
+		run = data[data.length - 1];
+		var requiredTargets:Array<Target> = allTargets.filter(t -> switch (version) {
+			case Haxe3:
+				switch (t) {
+					case HashlinkImmix | HashlinkCImmix | Jvm | NodeJsEs6 | Eval:
+						false;
+					default:
+						true;
+				}
+			case Haxe4 | HaxeNightly:
+				true;
+		});
+		for (target in run.targets) {
+			var index:Int = requiredTargets.indexOf(cast target.name);
+			if (index < 0) {
+				// bonus target?
+				trace('[$version] has unexpected target ${target.name}');
+				continue;
+			}
+			requiredTargets.splice(index, 1);
+		}
+		return requiredTargets.join(", ");
 	}
 
 	function showLatest(chartId:String, title:String, labelY:String, valueCallback:(target:TargetResult) -> TimeValue) {
