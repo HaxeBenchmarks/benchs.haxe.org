@@ -142,8 +142,7 @@ class BenchmarkJS {
 		var requiredTargets:Array<Target> = allTargets.filter(t -> switch (version) {
 			case Haxe3:
 				switch (t) {
-					case HashlinkImmix | HashlinkCImmix | Jvm | NodeJsEs6 | Eval:
-						false;
+					case CppGCGen | HashlinkImmix | HashlinkCImmix | Jvm | NodeJsEs6 | Eval: false;
 					default:
 						true;
 				}
