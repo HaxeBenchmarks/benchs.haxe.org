@@ -128,7 +128,7 @@ class BenchmarkJS {
 		};
 
 		var issues:String = buildIssueList(haxe3Data, Haxe3);
-		showIssues(buildIssueList(haxe3Data, Haxe3), "haxe3Issues");
+		// showIssues(buildIssueList(haxe3Data, Haxe3), "haxe3Issues");
 		showIssues(buildIssueList(haxe4Data, Haxe4), "haxe4Issues");
 		showIssues(buildIssueList(haxeNightlyData, HaxeNightly), "haxeNightlyIssues");
 	}
