@@ -26,7 +26,7 @@ class FilterSettings {
 
 	public function new(updateGraphsCB:UpdateGraphs) {
 		this.updateGraphsCB = updateGraphsCB;
-		windowSize = 6;
+		windowSize = 13;
 		averageFactory = SimpleMovingAverage.new;
 		average = Simple;
 		showAverage = DataAndAverage;
@@ -102,7 +102,7 @@ class FilterSettings {
 		} else {
 			targets = targetList.split(",").map(t -> cast t.urlDecode()).filter(t -> switch ((t : Target)) {
 				case Cpp | CppGCGen | Cppia | Csharp | Hashlink | HashlinkC | HashlinkImmix | HashlinkCImmix | Java | Jvm | Neko | NodeJs | NodeJsEs6 | Php |
-					Python | Eval | Lua: true;
+					Python | Eval | Lua | Luajit: true;
 				default: false;
 			});
 		}
