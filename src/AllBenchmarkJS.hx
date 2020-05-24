@@ -266,10 +266,11 @@ class AllBenchmarkJS {
 		if (index < 0) {
 			return;
 		}
-		if ((allResults.haxe3Data == null) || (allResults.haxe3Data.length <= 0)) {
+		var results:Null<ArchivedResults> = datasetCallback(allResults);
+		if ((results == null) || (results.length <= 0)) {
 			return;
 		}
-		var lastRun:TestRun = allResults.haxe3Data[allResults.haxe3Data.length - 1];
+		var lastRun:TestRun = results[results.length - 1];
 		for (dataTarget in lastRun.targets) {
 			if (dataTarget.name != target) {
 				continue;
