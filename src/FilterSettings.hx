@@ -48,6 +48,7 @@ class FilterSettings {
 		new JQuery("#noTargets").change(changeNoTargets);
 		new JQuery(".targetCheckbox").change(changeTargets);
 		new JQuery(".timesSelect").change(changeTimeselection);
+		new JQuery("#selectedTarget").change(changeSelectedTarget);
 
 		untyped new JQuery("#startDate").change(changeRange).datepicker({dateFormat: "yy-mm-dd"});
 		untyped new JQuery("#endDate").change(changeRange).datepicker({dateFormat: "yy-mm-dd"});
@@ -175,6 +176,9 @@ class FilterSettings {
 				new JQuery("#timesCompiletime").prop("checked", true);
 			case _:
 				new JQuery("#timesRuntime").prop("checked", true);
+		}
+		if (targets.length > 0) {
+			new JQuery("#selectedTarget").val(cast targets[0]);
 		}
 
 		updateDateVal("#startDate", startDate);
@@ -314,6 +318,12 @@ class FilterSettings {
 			}
 			new JQuery("#allTargets").prop("checked", false);
 		}
+		updateGraphs(true);
+	}
+
+	function changeSelectedTarget(event:Event) {
+		var target:Target = cast new JQuery(event.target).val();
+		targets = Target.allTargets.filter(t -> t == target);
 		updateGraphs(true);
 	}
 

@@ -16,7 +16,9 @@
             </div>
         </div>
     </nav>
-    ::description::
+
+    <h1>Haxe all benchmarks</h1>
+    
     <form class="benchmarkFilter">
         <table>
             <tr>
@@ -77,24 +79,15 @@
                 </td>
             </tr>
             <tr>
-                <th>Targets</th>
+                <th>Target</th>
                 <td>
-                    <div class="filterAllTargets">
-                        <div>
-                            <label for="allTargets">select all</label><br />
-                            <input id="allTargets" name="allTargets" type="checkbox" value="true" checked />
-                        </div>
-                        <div>
-                            <label for="noTargets">deselect all</label><br />
-                            <input id="noTargets" name="noTargets" type="checkbox" value="true" />
-                        </div>
-                    </div>
-                    <ul class="filterTargets">
-                        ::foreach targets::<li>
-                            <label for="::checkboxId::">::name::</label><br />
-                            <input id="::checkboxId::" name="::checkboxId::" data-target="::id::" data-canvas-id="::canvasId::" class="targetCheckbox" type="checkbox" value="true" checked />
+                    <ul class="filterTarget">
+                        <li>
+                            <select id="selectedTarget" name="selectedTarget" >
+                                ::foreach targets::<option value="::id::">::id::</option>        
+                                ::end::
+                            </select>
                         </li>
-                        ::end::
                     </ul>
                 </td>
             </tr>
@@ -116,96 +109,15 @@
         </table>
     </form>
 
-    <div id="issueListContainer">
-        <!-- <div id="haxe3Issues">Haxe 3 issues: <span>unknown</span></div> -->
-        <div id="haxe4Issues">Haxe 4 issues: <span>unknown</span></div>
-        <div id="haxeNightlyIssues">Haxe nightly issues: <span>unknown</span></div>
-    </div>
-
-    <div class="benchmarkGraphs" stlye="">
+    <div class="benchmarkGraphs">
         <canvas id="latestBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
         <canvas id="latestCompileTimes" height="400" class="chartjs-render-monitor"></canvas>
-        ::foreach canvas::<canvas id="::canvasId::" data-target="::id::" height="400" class="chartjs-render-monitor targetCanvas"></canvas>
+        ::foreach benches::<canvas id="::canvasId::" data-bench="::id::" height="400" class="chartjs-render-monitor targetCanvas"></canvas>
         ::end::
     </div>
-
-    <table class="historyLog">
-        <tr>
-            <th>date</th>
-            <th>what</th>
-        </tr>
-        <tr>
-            <td>2020-05-23 00:00:00</td>
-            <td>upgraded Haxe 4.1.0 to Haxe 4.1.1</td>
-        </tr>
-        <tr>
-            <td>2020-05-22 22:00:00</td>
-            <td>added luajit<br/>downgraded lua 5.2 to lua 5.1</td>
-        </tr>
-        <tr>
-            <td>2020-05-17 21:00:00</td>
-            <td>using github version of hxnodejs</td>
-        </tr>
-        <tr>
-            <td>2020-05-16 00:00:00</td>
-            <td>upgraded hxnodejs 10.0.0 to 12.0.0</td>
-        </tr>
-        <tr>
-            <td>2020-05-13 16:00:00</td>
-            <td>upgraded Haxe 4.0.5 to Haxe 4.1.0</td>
-        </tr>
-        <tr>
-            <td>2020-05-08 18:00:00</td>
-            <td>added `rm -rf out` to clean ouput folders in between versions => increased compile times for C++</td>
-        </tr>
-        <tr>
-            <td>2020-05-06 02:00:00</td>
-            <td>switched SHA256, SHA512 and BCrypt benchmarks to benchmark-runner</td>
-        </tr>
-        <tr>
-            <td>2020-05-05 12:00:00</td>
-            <td>switched to benchmark-runner (all except SHA256, SHA512 and BCrypt benchmarks) - increased values due to including process launch time of testee</td>
-        </tr>
-        <tr>
-            <td>2020-04-25 18:00:00</td>
-            <td>upgraded PHP 7.3.15-3 to PHP 7.3.17-1<br/>upgraded Node v10.19.0 to Node v10.20.1</td>
-        </tr>
-        <tr>
-            <td>2020-04-25 14:00:00</td>
-            <td>added Cppia and Lua</td>
-        </tr>
-        <tr>
-            <td>2020-03-30 14:00:00</td>
-            <td>upgraded HL 1.10 to 1.11</td>
-        </tr>
-        <tr>
-            <td>2020-03-17 14:00:00</td>
-            <td>switched to hxcpp github</td>
-        </tr>
-        <tr>
-            <td>2020-03-15 15:00:00</td>
-            <td>added C++ (GC Gen) run</td>
-        </tr>
-        <tr>
-            <td>2020-03-01 03:00:00</td>
-            <td>upgraded PHP 7.3.13-1 to PHP 7.3.15-3<br/>upgrade Node v10.18.1 to Node v10.19.0</td>
-        </tr>
-        <tr>
-            <td>2020-01-20 00:00:00</td>
-            <td>upgraded to Haxe 4.0.5<br/>upgrade to lix 15.8.5</td>
-        </tr>
-        <tr>
-            <td>2019-11-29 22:00:00</td>
-            <td>upgraded to Haxe 4.0.3</td>
-        </tr>
-        <tr>
-            <td>2019-11-11 18:00:00</td>
-            <td>upgraded Haxe 4.0.1 to Haxe 4.0.2</td>
-        </tr>
-    </table>
 </body>
 <script src="../js/jquery.min.js" type="text/javascript"></script>
 <script src="../js/jquery-ui.min.js" type="text/javascript"></script>
 <script src="../js/Chart.min.js" type="text/javascript"></script>
-<script src="../js/benchmark.js" type="text/javascript"></script>
+<script src="../js/allBenchmarks.js" type="text/javascript"></script>
 </html>

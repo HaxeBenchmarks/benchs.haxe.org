@@ -10,9 +10,12 @@ class DetailPages {
 	}
 
 	function generatePages() {
-		for (benchmarkCase in FileSystem.readDirectory("cases")) {
+		var benches:Array<String> = FileSystem.readDirectory("cases");
+		benches.sort(sortBenches);
+		for (benchmarkCase in benches) {
 			generatePage(benchmarkCase);
 		}
+		generateAllPage(benches);
 	}
 
 	function generatePage(benchmarkCase:String) {
@@ -30,6 +33,19 @@ class DetailPages {
 		File.saveContent('site/$benchmarkCase/index.html', page);
 
 		linkData(benchmarkCase);
+	}
+
+	function generateAllPage(benches:Array<String>) {
+		var targetList:Array<TargetIds> = makeTargetList(Target.allTargets);
+		var context = {
+			title: 'Haxe all benchmarks',
+			targets: targetList,
+			benches: makeBenchesList(benches),
+		};
+		var resource:String = Resource.getString("allBenches");
+		var template:Template = new Template(resource);
+		var page:String = template.execute(context);
+		File.saveContent('site/allBenchmarks.html', page);
 	}
 
 	function linkData(benchmarkCase:String) {
@@ -60,11 +76,35 @@ class DetailPages {
 		return targetCheckboxes;
 	}
 
+	function makeBenchesList(benches:Array<String>):Array<TargetIds> {
+		var targetCheckboxes:Array<TargetIds> = [];
+		for (bench in benches) {
+			var id:TargetId = cast bench;
+			targetCheckboxes.push({
+				id: bench,
+				checkboxId: 'bench$id',
+				canvasId: 'canvas$id',
+				name: bench
+			});
+		}
+		return targetCheckboxes;
+	}
+
 	function makeDescription(benchmarkCase:String):String {
 		if (!FileSystem.exists('cases/$benchmarkCase/README.md')) {
 			return "";
 		}
 		return Markdown.markdownToHtml(File.getContent('cases/$benchmarkCase/README.md'));
+	}
+
+	public static function sortBenches(a:String, b:String):Int {
+		if (a > b) {
+			return 1;
+		}
+		if (a < b) {
+			return -1;
+		}
+		return 0;
 	}
 
 	public static function main() {

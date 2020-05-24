@@ -12,10 +12,7 @@
                 "$haxe-error",
                 "$haxe-trace"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "label": "haxe: buildPagesJS.hxml"
         },
         {
@@ -29,6 +26,21 @@
             ],
             "group": "build",
             "label": "haxe: buildDetailPages.hxml"
+        },
+        {
+            "type": "hxml",
+            "file": "buildAllBenchmarkJS.hxml",
+            "problemMatcher": [
+                "$haxe-absolute",
+                "$haxe",
+                "$haxe-error",
+                "$haxe-trace"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "label": "haxe: buildAllBenchmarkJS.hxml"
         }
     ]
 }
