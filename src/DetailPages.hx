@@ -38,7 +38,6 @@ class DetailPages {
 	function generateAllPage(benches:Array<String>) {
 		var targetList:Array<TargetIds> = makeTargetList(Target.allTargets);
 		var context = {
-			title: 'Haxe all benchmarks',
 			targets: targetList,
 			benches: makeBenchesList(benches),
 		};
