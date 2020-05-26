@@ -34,7 +34,6 @@ class HaxePRBenchmarkJS {
 		filterSettings = new FilterSettings(checkLoaded);
 
 		benchmarks = [for (e in new JQuery(".targetCanvas").elements()) e.data("bench")];
-		benchmarks = ["json", "alloc", "formatter"];
 		loadBenchesData();
 
 		documentLoaded = false;
