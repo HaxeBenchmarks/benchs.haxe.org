@@ -281,17 +281,17 @@ class HaxePRBenchmarkJS {
 		}
 	}
 
-	public static function makeGraphDatasets(target:Target):Array<GraphDatasetInfo> {
+	public static function makeGraphDatasets(target:Target, prVersion:String):Array<GraphDatasetInfo> {
 		return [
 			BenchmarkJS.makeGraphDataset(HaxeNightly, false, target + " (Haxe nightly)", "#66FF66", "#66FF66"),
-			BenchmarkJS.makeGraphDataset(HaxePR, false, target + " (Haxe 4)", "#0000FF", "#0000FF"),
+			BenchmarkJS.makeGraphDataset(HaxePR, false, '$target ($prVersion)', "#0000FF", "#0000FF"),
 			BenchmarkJS.makeGraphDataset(HaxeNightly, true, target + " (Haxe nightly avg)", "#88FFCC", "#88FFCC"),
-			BenchmarkJS.makeGraphDataset(HaxePR, true, target + " (Haxe 4 avg)", "#CCCCFF", "#CCCCFF"),
+			BenchmarkJS.makeGraphDataset(HaxePR, true, '$target ($prVersion avg)', "#CCCCFF", "#CCCCFF"),
 		];
 	}
 
 	function showHistory(target:Target, benchmarkName:String, canvasId:String) {
-		var graphDataSets:Array<GraphDatasetInfo> = makeGraphDatasets(target);
+		var graphDataSets:Array<GraphDatasetInfo> = makeGraphDatasets(target, filterSettings.haxePRVersion);
 
 		var allResults:PRBenchResults = benchesData.get(benchmarkName);
 		if (allResults == null || allResults.haxePRData == null || allResults.haxeNightlyData == null) {
