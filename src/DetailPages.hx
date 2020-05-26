@@ -16,6 +16,7 @@ class DetailPages {
 			generatePage(benchmarkCase);
 		}
 		generateAllPage(benches);
+		generateHaxePRPage(benches);
 	}
 
 	function generatePage(benchmarkCase:String) {
@@ -45,6 +46,18 @@ class DetailPages {
 		var template:Template = new Template(resource);
 		var page:String = template.execute(context);
 		File.saveContent('site/allBenchmarks.html', page);
+	}
+
+	function generateHaxePRPage(benches:Array<String>) {
+		var targetList:Array<TargetIds> = makeTargetList(Target.allTargets);
+		var context = {
+			targets: targetList,
+			benches: makeBenchesList(benches),
+		};
+		var resource:String = Resource.getString("haxePRBenches");
+		var template:Template = new Template(resource);
+		var page:String = template.execute(context);
+		File.saveContent('site/prBenchmarks.html', page);
 	}
 
 	function linkData(benchmarkCase:String) {

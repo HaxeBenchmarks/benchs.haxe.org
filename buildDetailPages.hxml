@@ -6,5 +6,6 @@
 
 -resource template/casePage.html@casePage
 -resource template/allBenches.html@allBenches
+-resource template/haxePRBenches.html@haxePRBenches
 
 --run DetailPages

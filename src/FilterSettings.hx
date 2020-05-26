@@ -1,5 +1,6 @@
 import js.Browser;
 import js.html.Element;
+import js.html.Option;
 import js.jquery.Event;
 import js.jquery.JQuery;
 import data.ExponentialMovingAverage;
@@ -20,6 +21,7 @@ class FilterSettings {
 	public var endDate:Null<Float>;
 	public var targets:Array<Target>;
 	public var timesSelection:TimesSelection;
+	public var haxePRVersion:String;
 
 	var defaultSettings:String;
 	var updateGraphsCB:UpdateGraphs;
@@ -36,6 +38,7 @@ class FilterSettings {
 		timesSelection = Runtime;
 		startDate = Date.now().getTime() - 20 * 24 * 60 * 60 * 1000;
 		targets = Target.allTargets;
+		haxePRVersion = "";
 		defaultSettings = buildSettingsText();
 
 		new JQuery("#onlyAverage").change(changeOnlyAverage);
@@ -49,6 +52,7 @@ class FilterSettings {
 		new JQuery(".targetCheckbox").change(changeTargets);
 		new JQuery(".timesSelect").change(changeTimeselection);
 		new JQuery("#selectedTarget").change(changeSelectedTarget);
+		new JQuery("#selectedPR").change(changeSelectedPR);
 
 		untyped new JQuery("#startDate").change(changeRange).datepicker({dateFormat: "yy-mm-dd"});
 		untyped new JQuery("#endDate").change(changeRange).datepicker({dateFormat: "yy-mm-dd"});
@@ -108,6 +112,7 @@ class FilterSettings {
 			});
 		}
 		timesSelection = cast settings.shift();
+		haxePRVersion = settings.shift();
 		updateSettings();
 	}
 
@@ -135,6 +140,8 @@ class FilterSettings {
 			settings.push(targets.map(t -> t.urlEncode()).join(","));
 		}
 		settings.push('$timesSelection');
+		settings.push(haxePRVersion);
+
 		return settings.join(";");
 	}
 
@@ -183,6 +190,9 @@ class FilterSettings {
 
 		updateDateVal("#startDate", startDate);
 		updateDateVal("#endDate", endDate);
+
+		new JQuery("#selectedPR").val(haxePRVersion);
+
 		updateGraphs(false);
 	}
 
@@ -324,6 +334,22 @@ class FilterSettings {
 	function changeSelectedTarget(event:Event) {
 		var target:Target = cast new JQuery(event.target).val();
 		targets = Target.allTargets.filter(t -> t == target);
+		updateGraphs(true);
+	}
+
+	public function setPRVersions(prList:Array<String>) {
+		var select:JQuery = new JQuery("#selectedPR").html("");
+		for (pr in prList) {
+			if ((haxePRVersion == null) || (haxePRVersion.length <= 0)) {
+				haxePRVersion = pr;
+			}
+			select.append(new Option(pr, pr));
+		}
+		select.val(haxePRVersion).change(changeSelectedPR);
+	}
+
+	function changeSelectedPR(event:Event) {
+		haxePRVersion = cast new JQuery(event.target).val();
 		updateGraphs(true);
 	}
 

@@ -78,6 +78,7 @@ pipeline {
                 sh '''
                 npx haxe buildPagesJS.hxml
                 npx haxe buildAllBenchmarkJS.hxml
+                npx haxe buildHaxePRBenchmarkJS.hxml
                 '''
             }
         }

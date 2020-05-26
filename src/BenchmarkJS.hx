@@ -146,7 +146,7 @@ class BenchmarkJS {
 					default:
 						true;
 				}
-			case Haxe4 | HaxeNightly:
+			case Haxe4 | HaxeNightly | HaxePR:
 				true;
 		});
 		for (target in run.targets) {
@@ -428,9 +428,7 @@ class BenchmarkJS {
 					case CppGCGen | HashlinkImmix | HashlinkCImmix | Jvm | NodeJsEs6 | Eval:
 						false;
 				}
-			case Haxe4:
-				true;
-			case HaxeNightly:
+			case Haxe4 | HaxeNightly | HaxePR:
 				true;
 		}
 	}
