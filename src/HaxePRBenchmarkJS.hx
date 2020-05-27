@@ -15,6 +15,7 @@ import json2object.JsonParser;
 class HaxePRBenchmarkJS {
 	var benchesData:Map<String, PRBenchResults>;
 	var haxeNightlyVersion:String;
+	var haxePRVersion:String;
 	var documentLoaded:Bool;
 	var filterSettings:FilterSettings;
 	var chartObjects:Map<String, Any>;
@@ -135,6 +136,12 @@ class HaxePRBenchmarkJS {
 
 	function showData() {
 		var target:Target = filterSettings.targets[0];
+
+		var lastRun:TestRun = findLatestPRRun(benchmarks[0]);
+		if (lastRun != null) {
+			haxePRVersion = lastRun.haxeVersion;
+		}
+
 		showLatest("latestBenchmarks", 'latest benchmark results (lower is faster)', "runtime in seconds", target, (target) -> target.time);
 		showLatest("latestCompileTimes", 'latest compile times (lower is faster)', "compile time in seconds", target, (target) -> target.compileTime);
 
@@ -154,7 +161,7 @@ class HaxePRBenchmarkJS {
 			data: [for (label in labels) null]
 		};
 		var haxePRDataset = {
-			label: filterSettings.haxePRVersion,
+			label: '$haxePRVersion [${filterSettings.haxePRVersion}]',
 			backgroundColor: "#6666FF",
 			borderColor: "#0000FF",
 			borderWidth: 1,
@@ -291,7 +298,12 @@ class HaxePRBenchmarkJS {
 	}
 
 	function showHistory(target:Target, benchmarkName:String, canvasId:String) {
-		var graphDataSets:Array<GraphDatasetInfo> = makeGraphDatasets(target, filterSettings.haxePRVersion);
+		var lastRun:TestRun = findLatestPRRun(benchmarkName);
+		if (lastRun != null) {
+			haxePRVersion = lastRun.haxeVersion;
+		}
+
+		var graphDataSets:Array<GraphDatasetInfo> = makeGraphDatasets(target, '$haxePRVersion [${filterSettings.haxePRVersion}]');
 
 		var allResults:PRBenchResults = benchesData.get(benchmarkName);
 		if (allResults == null || allResults.haxePRData == null || allResults.haxeNightlyData == null) {
