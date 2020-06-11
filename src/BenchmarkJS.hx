@@ -6,8 +6,8 @@ import js.html.CanvasRenderingContext2D;
 import js.html.Element;
 import js.jquery.JQuery;
 import Target.allTargets;
+import benchmark.data.TestRun;
 import data.IMovingAverage;
-import data.TestRun;
 import json2object.JsonParser;
 
 class BenchmarkJS {

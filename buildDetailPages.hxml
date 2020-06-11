@@ -1,7 +1,7 @@
 -cp src
 
 -lib json2object
--lib benchmark-helper
+-lib benchmark-runner
 -lib markdown
 
 -resource template/casePage.html@casePage

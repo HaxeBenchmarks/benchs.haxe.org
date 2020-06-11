@@ -1,6 +1,6 @@
 package data;
 
-import data.TestRun.TimeValue;
+import benchmark.data.TestRun.TimeValue;
 
 class SimpleMovingAverage implements IMovingAverage {
 	var values:Array<Float>;

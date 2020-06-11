@@ -8,8 +8,8 @@ import js.jquery.JQuery;
 import BenchmarkJS.GraphDatasetInfo;
 import BenchmarkJS.HistoricalDataPoint;
 import BenchmarkJS.TargetTimeValues;
+import benchmark.data.TestRun;
 import data.IMovingAverage;
-import data.TestRun;
 import json2object.JsonParser;
 
 class HaxePRBenchmarkJS {

@@ -8,14 +8,11 @@ import js.jquery.JQuery;
 import BenchmarkJS.GraphDatasetInfo;
 import BenchmarkJS.HistoricalDataPoint;
 import BenchmarkJS.TargetTimeValues;
+import benchmark.data.TestRun;
 import data.IMovingAverage;
-import data.TestRun;
 import json2object.JsonParser;
 
 class AllBenchmarkJS {
-	// var haxe3Data:Null<ArchivedResults>;
-	// var haxe4Data:Null<ArchivedResults>;
-	// var haxeNightlyData:Null<ArchivedResults>;
 	var benchesData:Map<String, AllBenchResults>;
 	var haxe3Version:String;
 	var haxe4Version:String;
