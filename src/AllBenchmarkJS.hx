@@ -22,6 +22,7 @@ class AllBenchmarkJS {
 	var chartObjects:Map<String, Any>;
 	var benchmarks:Array<String>;
 	var outstandingRequests:Int = 0;
+	var latestTime:Float;
 
 	public static function main() {
 		new AllBenchmarkJS();
@@ -31,6 +32,7 @@ class AllBenchmarkJS {
 		haxe3Version = "3";
 		haxe4Version = "4";
 		haxeNightlyVersion = "nightly";
+		latestTime = 0;
 
 		filterSettings = new FilterSettings(checkLoaded);
 
@@ -144,6 +146,7 @@ class AllBenchmarkJS {
 	}
 
 	function showData() {
+		updateLastestTime();
 		var target:Target = filterSettings.targets[0];
 		showLatest("latestBenchmarks", 'latest benchmark results (lower is faster)', "runtime in seconds", target, (target) -> target.time);
 		showLatest("latestCompileTimes", 'latest compile times (lower is faster)', "compile time in seconds", target, (target) -> target.compileTime);
@@ -152,6 +155,22 @@ class AllBenchmarkJS {
 			var elem:JQuery = new JQuery(element);
 			showHistory(target, elem.data("bench"), elem.attr("id"));
 		});
+	}
+
+	function updateLastestTime() {
+		for (key => bench in benchesData) {
+			if (latestTime <= 0) {
+				latestTime = Date.fromString(bench.haxe4Data[bench.haxe4Data.length - 1].date).getTime();
+			}
+			var time:Float = Date.fromString(bench.haxe4Data[bench.haxe4Data.length - 1].date).getTime();
+			if (time > latestTime) {
+				latestTime = time;
+			}
+			time = Date.fromString(bench.haxeNightlyData[bench.haxeNightlyData.length - 1].date).getTime();
+			if (time > latestTime) {
+				latestTime = time;
+			}
+		}
 	}
 
 	function showLatest(chartId:String, title:String, labelY:String, target:Target, valueCallback:(target:TargetResult) -> TimeValue) {
@@ -346,7 +365,7 @@ class AllBenchmarkJS {
 			datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly, valueCallback));
 		}
 		datasetData.sort(BenchmarkJS.sortDate);
-		datasetData = BenchmarkJS.mergeTimes(datasetData);
+		datasetData = BenchmarkJS.mergeTimes(datasetData, latestTime);
 
 		var now:Float = Date.now().getTime();
 		for (item in datasetData) {

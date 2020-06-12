@@ -21,7 +21,6 @@ class BenchmarkJS {
 	var filterSettings:FilterSettings;
 	var chartObjects:Map<String, Any>;
 	var benchmarkName:String;
-
 	var latestTime:Float;
 
 	public static function main() {
