@@ -22,6 +22,8 @@ class BenchmarkJS {
 	var chartObjects:Map<String, Any>;
 	var benchmarkName:String;
 
+	var latestTime:Float;
+
 	public static function main() {
 		new BenchmarkJS();
 	}
@@ -36,6 +38,7 @@ class BenchmarkJS {
 		haxeNightlyVersion = "nightly";
 		documentLoaded = false;
 		chartObjects = new Map<String, Any>();
+		latestTime = 0;
 		requestArchivedData();
 		new JQuery(Browser.document).ready(function() {
 			documentLoaded = true;
@@ -105,6 +108,7 @@ class BenchmarkJS {
 		}
 		haxe4Version = haxe4Data[haxe4Data.length - 1].haxeVersion;
 		haxeNightlyVersion = haxeNightlyData[haxeNightlyData.length - 1].haxeVersion;
+		updateLastestTime();
 
 		buildIssueLists();
 		showLatest("latestBenchmarks", 'latest $benchmarkName benchmark results (lower is faster)', "runtime in seconds", (target) -> target.time);
@@ -114,6 +118,14 @@ class BenchmarkJS {
 			var elem:JQuery = new JQuery(element);
 			showHistory(elem.data("target"), elem.attr("id"));
 		});
+	}
+
+	function updateLastestTime() {
+		latestTime = Date.fromString(haxe4Data[haxe4Data.length - 1].date).getTime();
+		var time:Float = Date.fromString(haxeNightlyData[haxeNightlyData.length - 1].date).getTime();
+		if (time > latestTime) {
+			latestTime = time;
+		}
 	}
 
 	function buildIssueLists() {
@@ -352,7 +364,7 @@ class BenchmarkJS {
 			datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly, valueCallback));
 		}
 		datasetData.sort(sortDate);
-		datasetData = mergeTimes(datasetData);
+		datasetData = mergeTimes(datasetData, latestTime);
 
 		var now:Float = Date.now().getTime();
 		for (item in datasetData) {
@@ -444,7 +456,7 @@ class BenchmarkJS {
 		return true;
 	}
 
-	public static function mergeTimes(datasetData:Array<HistoricalDataPoint>):Array<HistoricalDataPoint> {
+	public static function mergeTimes(datasetData:Array<HistoricalDataPoint>, latestTimeValue:Float):Array<HistoricalDataPoint> {
 		var result:Array<HistoricalDataPoint> = [];
 		var lastDataPoint:Null<HistoricalDataPoint> = null;
 		var lastTime:Null<Float> = null;
@@ -468,6 +480,13 @@ class BenchmarkJS {
 			for (key => val in data.sma) {
 				lastDataPoint.sma.set(key, val);
 			}
+		}
+		if (lastTime < latestTimeValue) {
+			result.push({
+				time: [],
+				sma: [],
+				date: DateTools.format(Date.fromTime(latestTimeValue), "%Y-%m-%d %H:%M:%S")
+			});
 		}
 		return result;
 	}
