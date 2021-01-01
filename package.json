@@ -24,7 +24,7 @@
     "sass": ""
   },
   "devDependencies": {
-    "lix": "^15.8.15"
+    "lix": "^15.10.1"
   },
   "homepage": "https://github.com/HaxeBenchmarks/benchs.haxe.org#readme"
 }
