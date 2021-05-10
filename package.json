@@ -18,7 +18,7 @@
     "url": "https://github.com/HaxeBenchmarks/benchs.haxe.org/issues"
   },
   "dependencies": {
-    "chart.js": "2.8.0",
+    "chart.js": "2.9.4",
     "jquery": "^3.5.0",
     "jquery-ui": "",
     "sass": ""
