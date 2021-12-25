@@ -18,7 +18,11 @@ pipeline {
 
                 echo 'build jquery-ui'
                 sh '''
-                cd node_modules/jquery-ui
+                # releases newer than 1.12.1 no longer include a gruntfile so use sources instead...
+                cd node_modules
+                rm -rf jquery-ui
+                svn export https://github.com/jquery/jquery-ui/trunk jquery-ui
+                cd jquery-ui
                 npm i
                 npx grunt concat requirejs uglify
                 '''
