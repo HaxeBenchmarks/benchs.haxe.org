@@ -1,5 +1,7 @@
 site/js/*
 site/css/*
+site/**/data
+site/**/index.html
 node_modules
 .sass-cache
 site/alloc

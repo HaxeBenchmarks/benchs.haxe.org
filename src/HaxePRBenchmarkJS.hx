@@ -271,16 +271,20 @@ class HaxePRBenchmarkJS {
 		}
 	}
 
-	function findLatestPRRun(bench:String):TestRun {
+	function findAllPRRuns(bench:String):Array<TestRun> {
 		var allResults:Null<PRBenchResults> = benchesData.get(bench);
 		if (allResults == null) {
-			return null;
+			return [];
 		}
 		var results:Null<ArchivedResults> = allResults.haxePRData;
 		if ((results == null) || (results.length <= 0)) {
-			return null;
+			return [];
 		}
-		var runs:Array<TestRun> = results.filter(r -> r.toolVersions.get(HaxePR) == filterSettings.haxePRVersion);
+		return results.filter(r -> r.toolVersions.get(HaxePR) == filterSettings.haxePRVersion);
+	}
+
+	function findLatestPRRun(bench:String):TestRun {
+		var runs:Array<TestRun> = findAllPRRuns(bench);
 		if (runs.length <= 0) {
 			return null;
 		}
@@ -452,28 +456,34 @@ class HaxePRBenchmarkJS {
 	function getPRData(target:Target, benchmarkName:String, startDate:String, valueCallback:(times:TargetTimeValues) -> TimeValue):Array<HistoricalDataPoint> {
 		var datasetData:Array<HistoricalDataPoint> = [];
 
-		var lastRun:TestRun = findLatestPRRun(benchmarkName);
-		if (lastRun == null) {
+		var runs:Array<TestRun> = findAllPRRuns(benchmarkName);
+		if (runs.length <= 0) {
 			return [];
 		}
-
-		var times:Null<TargetTimeValues> = BenchmarkJS.getHistoryTime(lastRun, target);
-		if (times == null) {
-			return [];
+		if (runs.length == 1) {
+			var times:Null<TargetTimeValues> = BenchmarkJS.getHistoryTime(runs[0], target);
+			if (times == null) {
+				return [];
+			}
+			var time:TimeValue = valueCallback(times);
+			datasetData.push({
+				time: [HaxePR => time],
+				sma: [HaxePR => time],
+				date: startDate
+			});
 		}
-		var time:TimeValue = valueCallback(times);
-
-		datasetData.push({
-			time: [HaxePR => time],
-			sma: [HaxePR => time],
-			date: startDate
-		});
-
-		datasetData.push({
-			time: [HaxePR => time],
-			sma: [HaxePR => time],
-			date: lastRun.date
-		});
+		for (run in runs) {
+			var times:Null<TargetTimeValues> = BenchmarkJS.getHistoryTime(run, target);
+			if (times == null) {
+				return [];
+			}
+			var time:TimeValue = valueCallback(times);
+			datasetData.push({
+				time: [HaxePR => time],
+				sma: [HaxePR => time],
+				date: run.date
+			});
+		}
 
 		return datasetData;
 	}
