@@ -153,7 +153,7 @@ class BenchmarkJS {
 		var requiredTargets:Array<Target> = allTargets.filter(t -> switch (version) {
 			case Haxe3:
 				switch (t) {
-					case CppGCGen | HashlinkImmix | HashlinkCImmix | Jvm | NodeJsEs6 | Eval: false;
+					case CppGCGen | Jvm | NodeJsEs6 | Eval: false;
 					default:
 						true;
 				}
@@ -436,7 +436,7 @@ class BenchmarkJS {
 				switch (target) {
 					case Cpp | Cppia | Csharp | Hashlink | HashlinkC | Java | Neko | NodeJs | Php | Python | Lua | Luajit:
 						true;
-					case CppGCGen | HashlinkImmix | HashlinkCImmix | Jvm | NodeJsEs6 | Eval:
+					case CppGCGen | Jvm | NodeJsEs6 | Eval:
 						false;
 				}
 			case Haxe4 | HaxeNightly | HaxePR:

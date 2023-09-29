@@ -494,7 +494,7 @@ class HaxePRBenchmarkJS {
 				switch (target) {
 					case Cpp | Cppia | Csharp | Hashlink | HashlinkC | Java | Neko | NodeJs | Php | Python | Lua | Luajit:
 						true;
-					case CppGCGen | HashlinkImmix | HashlinkCImmix | Jvm | NodeJsEs6 | Eval:
+					case CppGCGen | Jvm | NodeJsEs6 | Eval:
 						false;
 				}
 			case Haxe4 | HaxeNightly | HaxePR:

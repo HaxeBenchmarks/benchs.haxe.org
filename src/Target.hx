@@ -5,8 +5,8 @@ enum abstract Target(String) to String {
 	var Csharp = "C#";
 	var Hashlink = "HashLink";
 	var HashlinkC = "HashLink/C";
-	var HashlinkImmix = "HashLink Immix";
-	var HashlinkCImmix = "HashLink/C Immix";
+	// var HashlinkImmix = "HashLink Immix";
+	// var HashlinkCImmix = "HashLink/C Immix";
 	var Java = "Java";
 	var Jvm = "JVM";
 	var Neko = "Neko";
@@ -20,7 +20,23 @@ enum abstract Target(String) to String {
 }
 
 final allTargets:Array<Target> = [
-	Cpp, CppGCGen, Cppia, Csharp, Hashlink, HashlinkC, HashlinkImmix, HashlinkCImmix, Java, Jvm, Eval, Neko, NodeJs, NodeJsEs6, Php, Python, Lua, Luajit
+	Cpp,
+	CppGCGen,
+	Cppia,
+	Csharp,
+	Hashlink,
+	HashlinkC,
+	/*HashlinkImmix, HashlinkCImmix, */
+	Java,
+	Jvm,
+	Eval,
+	Neko,
+	NodeJs,
+	NodeJsEs6,
+	Php,
+	Python,
+	Lua,
+	Luajit
 ];
 
 abstract TargetId(Target) {

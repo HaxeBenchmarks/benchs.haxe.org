@@ -106,8 +106,7 @@ class FilterSettings {
 			targets = Target.allTargets;
 		} else {
 			targets = targetList.split(",").map(t -> cast t.urlDecode()).filter(t -> switch ((t : Target)) {
-				case Cpp | CppGCGen | Cppia | Csharp | Hashlink | HashlinkC | HashlinkImmix | HashlinkCImmix | Java | Jvm | Neko | NodeJs | NodeJsEs6 | Php |
-					Python | Eval | Lua | Luajit: true;
+				case Cpp | CppGCGen | Cppia | Csharp | Hashlink | HashlinkC | Java | Jvm | Neko | NodeJs | NodeJsEs6 | Php | Python | Eval | Lua | Luajit: true;
 				default: false;
 			});
 		}
