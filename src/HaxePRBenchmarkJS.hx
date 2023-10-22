@@ -58,7 +58,7 @@ class HaxePRBenchmarkJS {
 	}
 
 	function loadBenchData(benchmark:String) {
-		var request:Http = new Http('$benchmark/data/haxe-pr.json');
+		var request:Http = new Http('$benchmark/data/haxe-pr.json?r=${Math.random()}');
 		request.onData = function(data:String) {
 			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
 			var data:ArchivedResults = parser.fromJson(data, "haxe-pr.json");
@@ -72,7 +72,7 @@ class HaxePRBenchmarkJS {
 		}
 		request.request();
 
-		request = new Http('$benchmark/data/haxe-nightly.json');
+		request = new Http('$benchmark/data/haxe-nightly.json?r=${Math.random()}');
 		request.onData = function(data:String) {
 			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
 			var data:ArchivedResults = parser.fromJson(data, "haxe-nightly.json");
