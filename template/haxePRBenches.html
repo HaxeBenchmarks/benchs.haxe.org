@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Haxe PR benchmark</title>
+    <title>Haxe PR / banch benchmark</title>
     <link href="../css/Chart.min.css" type="text/css" rel="stylesheet" />
     <link href="../css/jquery-ui.css" type="text/css" rel="stylesheet" />
     <link href="../css/benchmark.css" type="text/css" rel="stylesheet" />
@@ -17,7 +17,7 @@
         </div>
     </nav>
 
-    <h1>Haxe PR benchmark <a href="info.html" alt="benchmark info" class="benchmarkSetupInfoPage">(info)</a></h1>
+    <h1>Haxe PR / branch benchmark <a href="info.html" alt="benchmark info" class="benchmarkSetupInfoPage">(info)</a></h1>
     
     <form class="benchmarkFilter">
         <table>
@@ -28,6 +28,14 @@
                         <li>
                             <select id="selectedPR" name="selectedPR">
                             </select>
+                        </li>
+                        <li>
+                            <label for="withHaxe4">Haxe 4</label><br />
+                            <input id="withHaxe4" name="withHaxe4" type="checkbox" value="true" />
+                        </li>
+                        <li>
+                            <label for="withHaxeNightly">Haxe nightly</label><br />
+                            <input id="withHaxeNightly" name="withHaxeNightly" type="checkbox" value="true" checked />
                         </li>
                     </ul>
                 </td>

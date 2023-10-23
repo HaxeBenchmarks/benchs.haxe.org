@@ -14,6 +14,7 @@ import json2object.JsonParser;
 
 class HaxePRBenchmarkJS {
 	var benchesData:Map<String, PRBenchResults>;
+	var haxe4Version:String;
 	var haxeNightlyVersion:String;
 	var haxePRVersion:String;
 	var documentLoaded:Bool;
@@ -50,7 +51,7 @@ class HaxePRBenchmarkJS {
 	}
 
 	function loadBenchesData() {
-		outstandingRequests = benchmarks.length * 2;
+		outstandingRequests = benchmarks.length * 3;
 		benchesData = new Map<String, PRBenchResults>();
 		for (bench in benchmarks) {
 			loadBenchData(bench);
@@ -68,6 +69,20 @@ class HaxePRBenchmarkJS {
 		}
 		request.onError = function(msg:String) {
 			trace("failed to download Haxe PR data: " + msg);
+			outstandingRequests--;
+		}
+		request.request();
+
+		request = new Http('$benchmark/data/haxe4.json?r=${Math.random()}');
+		request.onData = function(data:String) {
+			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
+			var data:ArchivedResults = parser.fromJson(data, "haxe4.json");
+			addBenchmarkData(benchmark, Haxe4, data);
+			outstandingRequests--;
+			checkLoaded();
+		}
+		request.onError = function(msg:String) {
+			trace("failed to download Haxe Nightly data: " + msg);
 			outstandingRequests--;
 		}
 		request.request();
@@ -91,13 +106,16 @@ class HaxePRBenchmarkJS {
 		var allBenchResults:Null<PRBenchResults> = benchesData.get(benchmark);
 		if (allBenchResults == null) {
 			allBenchResults = {
+				haxe4Data: null,
 				haxeNightlyData: null,
 				haxePRData: null
 			}
 			benchesData.set(benchmark, allBenchResults);
 		}
 		switch (haxeVersion) {
-			case Haxe3 | Haxe4:
+			case Haxe3:
+			case Haxe4:
+				allBenchResults.haxe4Data = resultData;
 			case HaxeNightly:
 				allBenchResults.haxeNightlyData = resultData;
 			case HaxePR:
@@ -131,6 +149,7 @@ class HaxePRBenchmarkJS {
 	function detectVersions() {
 		for (key => value in benchesData) {
 			haxeNightlyVersion = value.haxeNightlyData[value.haxeNightlyData.length - 1].haxeVersion;
+			haxe4Version = value.haxe4Data[value.haxe4Data.length - 1].haxeVersion;
 		}
 		prList.reverse();
 		filterSettings.setPRVersions(prList);
@@ -172,6 +191,13 @@ class HaxePRBenchmarkJS {
 
 	function showLatest(chartId:String, title:String, labelY:String, target:Target, valueCallback:(target:TargetResult) -> TimeValue) {
 		var labels:Array<String> = benchmarks;
+		var haxe4Dataset = {
+			label: haxe4Version,
+			backgroundColor: "#FF6666",
+			borderColor: "#FF0000",
+			borderWidth: 1,
+			data: [for (label in labels) null]
+		};
 		var haxeNightlyDataset = {
 			label: haxeNightlyVersion,
 			backgroundColor: "#66FF66",
@@ -190,10 +216,21 @@ class HaxePRBenchmarkJS {
 			labels: labels,
 			datasets: []
 		};
-		data.datasets.push(haxeNightlyDataset);
+		if (filterSettings.withHaxe4) {
+			data.datasets.push(haxe4Dataset);
+			for (bench in benchmarks) {
+				extractLatestData(haxe4Dataset, bench, target, r -> r.haxe4Data, valueCallback);
+			}
+		}
+		if (filterSettings.withHaxeNightly) {
+			data.datasets.push(haxeNightlyDataset);
+			for (bench in benchmarks) {
+				extractLatestData(haxeNightlyDataset, bench, target, r -> r.haxeNightlyData, valueCallback);
+			}
+		}
+
 		data.datasets.push(haxePRDataset);
 		for (bench in benchmarks) {
-			extractLatestData(haxeNightlyDataset, bench, target, r -> r.haxeNightlyData, valueCallback);
 			extractLatestPRData(haxePRDataset, bench, target, valueCallback);
 		}
 		var options = {
@@ -313,8 +350,10 @@ class HaxePRBenchmarkJS {
 
 	public static function makeGraphDatasets(target:Target, prVersion:String):Array<GraphDatasetInfo> {
 		return [
+			BenchmarkJS.makeGraphDataset(Haxe4, false, target + " (Haxe 4)", "#FF0000", "#FF0000"),
 			BenchmarkJS.makeGraphDataset(HaxeNightly, false, target + " (Haxe nightly)", "#66FF66", "#66FF66"),
 			BenchmarkJS.makeGraphDataset(HaxePR, false, '$target ($prVersion)', "#0000FF", "#0000FF"),
+			BenchmarkJS.makeGraphDataset(Haxe4, true, target + " (Haxe 4 avg)", "#FFCCCC", "#FFCCCC"),
 			BenchmarkJS.makeGraphDataset(HaxeNightly, true, target + " (Haxe nightly avg)", "#88FFCC", "#88FFCC"),
 			BenchmarkJS.makeGraphDataset(HaxePR, true, '$target ($prVersion avg)', "#CCCCFF", "#CCCCFF"),
 		];
@@ -334,8 +373,8 @@ class HaxePRBenchmarkJS {
 			return;
 		}
 
+		var haxe4Data:Null<ArchivedResults> = allResults.haxe4Data;
 		var haxeNightlyData:Null<ArchivedResults> = allResults.haxeNightlyData;
-		var haxePRData:Null<ArchivedResults> = allResults.haxePRData;
 
 		new JQuery('#$canvasId').show();
 
@@ -377,7 +416,13 @@ class HaxePRBenchmarkJS {
 				new JQuery('#$canvasId').addClass("benchmarkGraph").removeClass("compileTimeGraph");
 		}
 
-		datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly, valueCallback));
+		if (filterSettings.withHaxe4) {
+			datasetData = datasetData.concat(collectRunData(target, haxe4Data, Haxe4, valueCallback));
+		}
+		if (filterSettings.withHaxeNightly) {
+			datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly, valueCallback));
+		}
+
 		var startDate:String = "";
 		if (datasetData.length > 0) {
 			startDate = datasetData.filter(d -> showDate(d.date))[0].date;
@@ -535,6 +580,7 @@ class HaxePRBenchmarkJS {
 }
 
 typedef PRBenchResults = {
+	var haxe4Data:ArchivedResults;
 	var haxeNightlyData:ArchivedResults;
 	var haxePRData:ArchivedResults;
 }
