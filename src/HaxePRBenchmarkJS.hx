@@ -514,13 +514,13 @@ class HaxePRBenchmarkJS {
 			datasetData.push({
 				time: [HaxePR => time],
 				sma: [HaxePR => time],
-				date: startDate
+				date: runs[0].date
 			});
 		}
 		for (run in runs) {
 			var times:Null<TargetTimeValues> = BenchmarkJS.getHistoryTime(run, target);
 			if (times == null) {
-				return [];
+				continue;
 			}
 			var time:TimeValue = valueCallback(times);
 			datasetData.push({
