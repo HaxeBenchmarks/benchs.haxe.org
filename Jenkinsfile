@@ -39,7 +39,11 @@ pipeline {
             steps {
                 echo 'Copy Formatter detail pages'
                 sh '''
-                svn export https://github.com/HaxeBenchmarks/benchmark-runner/trunk/cases
+                rm -rf benchmark-runner
+                rm -rf cases
+                git clone https://github.com/HaxeBenchmarks/benchmark-runner.git
+                mv benchmark-runner/cases cases
+                # svn export https://github.com/HaxeBenchmarks/benchmark-runner/trunk/cases
                 '''
             }
         }
