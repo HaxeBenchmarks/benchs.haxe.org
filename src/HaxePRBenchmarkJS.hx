@@ -196,6 +196,7 @@ class HaxePRBenchmarkJS {
 			backgroundColor: "#FF6666",
 			borderColor: "#FF0000",
 			borderWidth: 1,
+			lineTension: 0,
 			data: [for (label in labels) null]
 		};
 		var haxeNightlyDataset = {
@@ -203,6 +204,7 @@ class HaxePRBenchmarkJS {
 			backgroundColor: "#66FF66",
 			borderColor: "#33FF33",
 			borderWidth: 1,
+			lineTension: 0,
 			data: [for (label in labels) null]
 		};
 		var haxePRDataset = {
@@ -210,6 +212,7 @@ class HaxePRBenchmarkJS {
 			backgroundColor: "#6666FF",
 			borderColor: "#0000FF",
 			borderWidth: 1,
+			lineTension: 0,
 			data: [for (label in labels) null]
 		};
 		var data = {

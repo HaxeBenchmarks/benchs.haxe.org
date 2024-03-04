@@ -190,6 +190,7 @@ class BenchmarkJS {
 				backgroundColor: "#FF6666",
 				borderColor: "#FF0000",
 				borderWidth: 1,
+				lineTension: 0,
 				data: [for (label in labels) null]
 			};
 		}
@@ -199,6 +200,7 @@ class BenchmarkJS {
 			backgroundColor: "#6666FF",
 			borderColor: "#0000FF",
 			borderWidth: 1,
+			lineTension: 0,
 			data: [for (label in labels) null]
 		};
 
@@ -207,6 +209,7 @@ class BenchmarkJS {
 			backgroundColor: "#66FF66",
 			borderColor: "#33FF33",
 			borderWidth: 1,
+			lineTension: 0,
 			data: [for (label in labels) null]
 		};
 
@@ -530,6 +533,7 @@ class BenchmarkJS {
 				backgroundColor: backgroundColor,
 				borderColor: borderColor,
 				borderWidth: 1,
+				lineTension: 0,
 				fill: false,
 				spanGaps: true,
 				data: []
@@ -576,6 +580,7 @@ typedef GraphDataset = {
 	var borderWidth:Int;
 	var fill:Bool;
 	var spanGaps:Bool;
+	var lineTension:Float;
 	var data:Array<TimeValue>;
 }
 
