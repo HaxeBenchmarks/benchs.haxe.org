@@ -25,7 +25,7 @@ pipeline {
                 # svn export https://github.com/jquery/jquery-ui/trunk jquery-ui
                 cd jquery-ui
                 npm i
-                npx grunt concat requirejs uglify
+                npx grunt concat requirejs minify
                 '''
 
                 echo 'installing NPM dependencies'
