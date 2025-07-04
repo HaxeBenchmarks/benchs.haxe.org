@@ -16,6 +16,7 @@ class FilterSettings {
 	public var average:AverageFunction;
 	public var withHaxe3:Bool;
 	public var withHaxe4:Bool;
+	public var withHaxe5:Bool;
 	public var withHaxeNightly:Bool;
 	public var startDate:Null<Float>;
 	public var endDate:Null<Float>;
@@ -34,6 +35,7 @@ class FilterSettings {
 		showAverage = DataAndAverage;
 		withHaxe3 = true;
 		withHaxe4 = true;
+		withHaxe5 = true;
 		withHaxeNightly = true;
 		timesSelection = Runtime;
 		startDate = Date.now().getTime() - 20 * 24 * 60 * 60 * 1000;
@@ -46,6 +48,7 @@ class FilterSettings {
 		new JQuery("#averageWindow").change(changeAverageWindow);
 		new JQuery("#withHaxe3").change(changeWithHaxe3);
 		new JQuery("#withHaxe4").change(changeWithHaxe4);
+		new JQuery("#withHaxe5").change(changeWithHaxe5);
 		new JQuery("#withHaxeNightly").change(changeWithHaxeNightly);
 		new JQuery("#allTargets").change(changeAllTargets);
 		new JQuery("#noTargets").change(changeNoTargets);
@@ -86,6 +89,7 @@ class FilterSettings {
 		windowSize = Std.parseInt(settings.shift());
 		withHaxe3 = settings.shift() == "true";
 		withHaxe4 = settings.shift() == "true";
+		withHaxe5 = settings.shift() == "true";
 		withHaxeNightly = settings.shift() == "true";
 		showAverage = cast settings.shift();
 		average = cast settings.shift();
@@ -120,6 +124,7 @@ class FilterSettings {
 		settings.push('$windowSize');
 		settings.push('$withHaxe3');
 		settings.push('$withHaxe4');
+		settings.push('$withHaxe5');
 		settings.push('$withHaxeNightly');
 		settings.push('$showAverage');
 		settings.push(new JQuery("#average").val());
@@ -168,6 +173,7 @@ class FilterSettings {
 		new JQuery("#averageWindow").val('$windowSize');
 		new JQuery("#withHaxe3").prop("checked", withHaxe3);
 		new JQuery("#withHaxe4").prop("checked", withHaxe4);
+		new JQuery("#withHaxe5").prop("checked", withHaxe5);
 		new JQuery("#withHaxeNightly").prop("checked", withHaxeNightly);
 
 		new JQuery("#allTargets").prop("checked", targets.length == Target.allTargets.length);
@@ -232,6 +238,11 @@ class FilterSettings {
 
 	function changeWithHaxe4(event:Event) {
 		withHaxe4 = new JQuery("#withHaxe4").is(":checked");
+		updateGraphs(true);
+	}
+
+	function changeWithHaxe5(event:Event) {
+		withHaxe5 = new JQuery("#withHaxe5").is(":checked");
 		updateGraphs(true);
 	}
 

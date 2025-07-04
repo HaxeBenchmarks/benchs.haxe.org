@@ -16,6 +16,7 @@ class AllBenchmarkJS {
 	var benchesData:Map<String, AllBenchResults>;
 	var haxe3Version:String;
 	var haxe4Version:String;
+	var haxe5Version:String;
 	var haxeNightlyVersion:String;
 	var documentLoaded:Bool;
 	var filterSettings:FilterSettings;
@@ -31,6 +32,7 @@ class AllBenchmarkJS {
 	public function new() {
 		haxe3Version = "3";
 		haxe4Version = "4";
+		haxe5Version = "5";
 		haxeNightlyVersion = "nightly";
 		latestTime = 0;
 
@@ -107,6 +109,7 @@ class AllBenchmarkJS {
 			allBenchResults = {
 				haxe3Data: null,
 				haxe4Data: null,
+				haxe5Data: null,
 				haxeNightlyData: null
 			}
 			benchesData.set(benchmark, allBenchResults);
@@ -116,6 +119,8 @@ class AllBenchmarkJS {
 				allBenchResults.haxe3Data = resultData;
 			case Haxe4:
 				allBenchResults.haxe4Data = resultData;
+			case Haxe5:
+				allBenchResults.haxe5Data = resultData;
 			case HaxeNightly:
 				allBenchResults.haxeNightlyData = resultData;
 			case HaxePR:
@@ -141,6 +146,7 @@ class AllBenchmarkJS {
 			}
 			haxe3Version = value.haxe3Data[value.haxe3Data.length - 1].haxeVersion;
 			haxe4Version = value.haxe4Data[value.haxe4Data.length - 1].haxeVersion;
+			haxe5Version = value.haxe5Data[value.haxe5Data.length - 1].haxeVersion;
 			haxeNightlyVersion = value.haxeNightlyData[value.haxeNightlyData.length - 1].haxeVersion;
 		}
 	}
@@ -166,6 +172,10 @@ class AllBenchmarkJS {
 			if (time > latestTime) {
 				latestTime = time;
 			}
+			time = Date.fromString(bench.haxe5Data[bench.haxe5Data.length - 1].date).getTime();
+			if (time > latestTime) {
+				latestTime = time;
+			}
 			time = Date.fromString(bench.haxeNightlyData[bench.haxeNightlyData.length - 1].date).getTime();
 			if (time > latestTime) {
 				latestTime = time;
@@ -187,6 +197,14 @@ class AllBenchmarkJS {
 			label: haxe4Version,
 			backgroundColor: "#6666FF",
 			borderColor: "#0000FF",
+			borderWidth: 1,
+			lineTension: 0,
+			data: [for (label in labels) null]
+		};
+		var haxe5Dataset = {
+			label: haxe5Version,
+			backgroundColor: "#6666FF",
+			borderColor: "#CC00FF",
 			borderWidth: 1,
 			lineTension: 0,
 			data: [for (label in labels) null]
@@ -217,6 +235,12 @@ class AllBenchmarkJS {
 			data.datasets.push(haxe4Dataset);
 			for (bench in benchmarks) {
 				extractLatestData(haxe4Dataset, bench, target, r -> r.haxe4Data, valueCallback);
+			}
+		}
+		if (filterSettings.withHaxe5) {
+			data.datasets.push(haxe5Dataset);
+			for (bench in benchmarks) {
+				extractLatestData(haxe5Dataset, bench, target, r -> r.haxe5Data, valueCallback);
 			}
 		}
 		if (filterSettings.withHaxeNightly) {
@@ -311,6 +335,7 @@ class AllBenchmarkJS {
 
 		var haxe3Data:Null<ArchivedResults> = allResults.haxe3Data;
 		var haxe4Data:Null<ArchivedResults> = allResults.haxe4Data;
+		var haxe5Data:Null<ArchivedResults> = allResults.haxe5Data;
 		var haxeNightlyData:Null<ArchivedResults> = allResults.haxeNightlyData;
 
 		new JQuery('#$canvasId').show();
@@ -363,6 +388,9 @@ class AllBenchmarkJS {
 		}
 		if (filterSettings.withHaxe4 && versionSupportsTarget(Haxe4, target)) {
 			datasetData = datasetData.concat(collectRunData(target, haxe4Data, Haxe4, valueCallback));
+		}
+		if (filterSettings.withHaxe5 && versionSupportsTarget(Haxe5, target)) {
+			datasetData = datasetData.concat(collectRunData(target, haxe5Data, Haxe5, valueCallback));
 		}
 		if (filterSettings.withHaxeNightly && versionSupportsTarget(HaxeNightly, target)) {
 			datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly, valueCallback));
@@ -444,8 +472,15 @@ class AllBenchmarkJS {
 					case CppGCGen | Jvm | NodeJsEs6 | Eval:
 						false;
 				}
-			case Haxe4 | HaxeNightly | HaxePR:
+			case Haxe4 | HaxePR:
 				true;
+			case Haxe5 | HaxeNightly:
+				switch (target) {
+					case Cpp | Cppia | Hashlink | HashlinkC | Neko | NodeJs | Php | Python | Lua | Luajit | CppGCGen | Jvm | NodeJsEs6 | Eval:
+						true;
+					case Csharp | Java:
+						false;
+				}
 		}
 	}
 
@@ -484,5 +519,6 @@ class AllBenchmarkJS {
 typedef AllBenchResults = {
 	var haxe3Data:ArchivedResults;
 	var haxe4Data:ArchivedResults;
+	var haxe5Data:ArchivedResults;
 	var haxeNightlyData:ArchivedResults;
 }
