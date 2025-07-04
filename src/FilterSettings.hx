@@ -89,7 +89,6 @@ class FilterSettings {
 		windowSize = Std.parseInt(settings.shift());
 		withHaxe3 = settings.shift() == "true";
 		withHaxe4 = settings.shift() == "true";
-		withHaxe5 = settings.shift() == "true";
 		withHaxeNightly = settings.shift() == "true";
 		showAverage = cast settings.shift();
 		average = cast settings.shift();
@@ -116,6 +115,7 @@ class FilterSettings {
 		}
 		timesSelection = cast settings.shift();
 		haxePRVersion = settings.shift();
+		withHaxe5 = settings.shift() == "true";
 		updateSettings();
 	}
 
@@ -124,7 +124,6 @@ class FilterSettings {
 		settings.push('$windowSize');
 		settings.push('$withHaxe3');
 		settings.push('$withHaxe4');
-		settings.push('$withHaxe5');
 		settings.push('$withHaxeNightly');
 		settings.push('$showAverage');
 		settings.push(new JQuery("#average").val());
@@ -145,6 +144,7 @@ class FilterSettings {
 		}
 		settings.push('$timesSelection');
 		settings.push(haxePRVersion);
+		settings.push('$withHaxe5');
 
 		return settings.join(";");
 	}
