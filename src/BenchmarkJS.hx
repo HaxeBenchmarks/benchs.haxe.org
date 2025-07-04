@@ -79,7 +79,7 @@ class BenchmarkJS {
 		var request:Http = new Http('data/haxe5.json?r=${Math.random()}');
 		request.onData = function(data:String) {
 			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
-			haxe4Data = parser.fromJson(data, "haxe5.json");
+			haxe5Data = parser.fromJson(data, "haxe5.json");
 			checkLoaded();
 		}
 		request.onError = function(msg:String) {
@@ -164,6 +164,7 @@ class BenchmarkJS {
 		var issues:String = buildIssueList(haxe3Data, Haxe3);
 		// showIssues(buildIssueList(haxe3Data, Haxe3), "haxe3Issues");
 		showIssues(buildIssueList(haxe4Data, Haxe4), "haxe4Issues");
+		showIssues(buildIssueList(haxe5Data, Haxe5), "haxe5Issues");
 		showIssues(buildIssueList(haxeNightlyData, HaxeNightly), "haxeNightlyIssues");
 	}
 
@@ -238,8 +239,8 @@ class BenchmarkJS {
 
 		var haxe5Dataset = {
 			label: latestHaxe5Data.haxeVersion,
-			backgroundColor: "#6666FF",
-			borderColor: "##CC00FF",
+			backgroundColor: "#CC00FF",
+			borderColor: "#6600FF",
 			borderWidth: 1,
 			lineTension: 0,
 			data: [for (label in labels) null]
