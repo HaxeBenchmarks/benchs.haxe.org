@@ -220,8 +220,8 @@ class BenchmarkJS {
 		if (hasHaxe3) {
 			haxe3Dataset = {
 				label: latestHaxe3Data.haxeVersion,
-				backgroundColor: "#FF6666",
-				borderColor: "#FF0000",
+				backgroundColor: "#CC00FF",
+				borderColor: "#6600FF",
 				borderWidth: 1,
 				lineTension: 0,
 				data: [for (label in labels) null]
@@ -239,8 +239,8 @@ class BenchmarkJS {
 
 		var haxe5Dataset = {
 			label: latestHaxe5Data.haxeVersion,
-			backgroundColor: "#CC00FF",
-			borderColor: "#6600FF",
+			backgroundColor: "#FF6666",
+			borderColor: "#FF0000",
 			borderWidth: 1,
 			lineTension: 0,
 			data: [for (label in labels) null]
@@ -577,13 +577,13 @@ class BenchmarkJS {
 
 	public static function makeGraphDatasets(target:Target):Array<GraphDatasetInfo> {
 		return [
-			makeGraphDataset(Haxe3, false, target + " (Haxe 3)", "#FF0000", "#FF0000"),
-			makeGraphDataset(Haxe4, false, target + " (Haxe 4)", "#0000FF", "#0000FF"),
-			makeGraphDataset(Haxe5, false, target + " (Haxe 5)", "#CC00FF", "#CC00FF"),
-			makeGraphDataset(HaxeNightly, false, target + " (Haxe nightly)", "#66FF66", "#66FF66"),
-			makeGraphDataset(Haxe3, true, target + " (Haxe 3 avg)", "#FFCCCC", "#FFCCCC"),
+			makeGraphDataset(Haxe3, false, target + " (Haxe 3)", "#CC00FF", "#CC00FF"),
+			makeGraphDataset(Haxe4, false, target + " (Haxe 4)", "#0000FFC0", "#0000FFC0"),
+			makeGraphDataset(Haxe5, false, target + " (Haxe 5)", "#FF0000C0", "#FF0000C0"),
+			makeGraphDataset(HaxeNightly, false, target + " (Haxe nightly)", "#66FF66C0", "#66FF66C0"),
+			makeGraphDataset(Haxe3, true, target + " (Haxe 3 avg)", "#FFAAFF", "#FFAAFF"),
 			makeGraphDataset(Haxe4, true, target + " (Haxe 4 avg)", "#CCCCFF", "#CCCCFF"),
-			makeGraphDataset(Haxe5, true, target + " (Haxe 5 avg)", "#FFAAFF", "#FFAAFF"),
+			makeGraphDataset(Haxe5, true, target + " (Haxe 5 avg)", "#FFCCCC", "#FFCCCC"),
 			makeGraphDataset(HaxeNightly, true, target + " (Haxe nightly avg)", "#88FFCC", "#88FFCC"),
 		];
 	}

@@ -222,8 +222,8 @@ class HaxePRBenchmarkJS {
 		};
 		var haxe5Dataset = {
 			label: haxe5Version,
-			backgroundColor: "#CC00FF",
-			borderColor: "#6600FF",
+			backgroundColor: "#FF6666",
+			borderColor: "#FF0000",
 			borderWidth: 1,
 			lineTension: 0,
 			data: [for (label in labels) null]
@@ -389,11 +389,11 @@ class HaxePRBenchmarkJS {
 	public static function makeGraphDatasets(target:Target, prVersion:String):Array<GraphDatasetInfo> {
 		return [
 			BenchmarkJS.makeGraphDataset(Haxe4, false, target + " (Haxe 4)", "#FF0000", "#FF0000"),
-			BenchmarkJS.makeGraphDataset(Haxe5, false, target + " (Haxe 5)", "#CC00FF", "#CC00FF"),
+			BenchmarkJS.makeGraphDataset(Haxe5, false, target + " (Haxe 5)", "#FF0000", "#FF0000"),
 			BenchmarkJS.makeGraphDataset(HaxeNightly, false, target + " (Haxe nightly)", "#66FF66", "#66FF66"),
 			BenchmarkJS.makeGraphDataset(HaxePR, false, '$target ($prVersion)', "#0000FF", "#0000FF"),
 			BenchmarkJS.makeGraphDataset(Haxe4, true, target + " (Haxe 4 avg)", "#FFCCCC", "#FFCCCC"),
-			BenchmarkJS.makeGraphDataset(Haxe5, true, target + " (Haxe 5 avg)", "#FFAAFF", "#FFAAFF"),
+			BenchmarkJS.makeGraphDataset(Haxe5, true, target + " (Haxe 5 avg)", "#FFCCCC", "#FFCCCC"),
 			BenchmarkJS.makeGraphDataset(HaxeNightly, true, target + " (Haxe nightly avg)", "#88FFCC", "#88FFCC"),
 			BenchmarkJS.makeGraphDataset(HaxePR, true, '$target ($prVersion avg)', "#CCCCFF", "#CCCCFF"),
 		];

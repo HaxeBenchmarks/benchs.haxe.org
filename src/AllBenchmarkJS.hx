@@ -201,8 +201,8 @@ class AllBenchmarkJS {
 		var labels:Array<String> = benchmarks;
 		var haxe3Dataset = {
 			label: haxe3Version,
-			backgroundColor: "#FF6666",
-			borderColor: "#FF0000",
+			backgroundColor: "#CC00FF",
+			borderColor: "#6600FF",
 			borderWidth: 1,
 			lineTension: 0,
 			data: [for (label in labels) null]
@@ -217,8 +217,8 @@ class AllBenchmarkJS {
 		};
 		var haxe5Dataset = {
 			label: haxe5Version,
-			backgroundColor: "#CC00FF",
-			borderColor: "#6600FF",
+			backgroundColor: "#FF6666",
+			borderColor: "#FF0000",
 			borderWidth: 1,
 			lineTension: 0,
 			data: [for (label in labels) null]
