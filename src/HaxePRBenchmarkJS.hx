@@ -222,8 +222,8 @@ class HaxePRBenchmarkJS {
 		};
 		var haxe5Dataset = {
 			label: haxe5Version,
-			backgroundColor: "#FF6666",
-			borderColor: "#CC00FF",
+			backgroundColor: "#CC00FF",
+			borderColor: "#6600FF",
 			borderWidth: 1,
 			lineTension: 0,
 			data: [for (label in labels) null]
