@@ -52,7 +52,7 @@ class AllBenchmarkJS {
 	}
 
 	function loadBenchesData() {
-		outstandingRequests = benchmarks.length * 3;
+		outstandingRequests = benchmarks.length * 4;
 		benchesData = new Map<String, AllBenchResults>();
 		for (bench in benchmarks) {
 			loadBenchData(bench);
@@ -84,6 +84,20 @@ class AllBenchmarkJS {
 		}
 		request.onError = function(msg:String) {
 			trace("failed to download Haxe 4 data: " + msg);
+			outstandingRequests--;
+		}
+		request.request();
+
+		request = new Http('$benchmark/data/haxe5.json?r=${Math.random()}');
+		request.onData = function(data:String) {
+			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
+			var data:ArchivedResults = parser.fromJson(data, "haxe5.json");
+			addBenchmarkData(benchmark, Haxe5, data);
+			outstandingRequests--;
+			checkLoaded();
+		}
+		request.onError = function(msg:String) {
+			trace("failed to download Haxe 5 data: " + msg);
 			outstandingRequests--;
 		}
 		request.request();
