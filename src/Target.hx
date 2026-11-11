@@ -2,7 +2,7 @@ enum abstract Target(String) to String {
 	var Cpp = "C++";
 	var CppGCGen = "C++ (GC Gen)";
 	var Cppia = "Cppia";
-	var Cppiajit = "Cppiajit";
+	var Cppiajit = "Cppia (JIT)";
 	var Csharp = "C#";
 	var Hashlink = "HashLink";
 	var HashlinkC = "HashLink/C";
