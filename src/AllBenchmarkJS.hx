@@ -483,14 +483,14 @@ class AllBenchmarkJS {
 				switch (target) {
 					case Cpp | Cppia | Csharp | Hashlink | HashlinkC | Java | Neko | NodeJs | Php | Python | Lua | Luajit:
 						true;
-					case CppGCGen | Jvm | NodeJsEs6 | Eval:
+					case CppGCGen | Cppiajit | Jvm | NodeJsEs6 | Eval:
 						false;
 				}
 			case Haxe4 | HaxePR:
 				true;
 			case Haxe5 | HaxeNightly:
 				switch (target) {
-					case Cpp | Cppia | Hashlink | HashlinkC | Neko | NodeJs | Php | Python | Lua | Luajit | CppGCGen | Jvm | NodeJsEs6 | Eval:
+					case Cpp | Cppia | Cppiajit | Hashlink | HashlinkC | Neko | NodeJs | Php | Python | Lua | Luajit | CppGCGen | Jvm | NodeJsEs6 | Eval:
 						true;
 					case Csharp | Java:
 						false;

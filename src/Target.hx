@@ -2,6 +2,7 @@ enum abstract Target(String) to String {
 	var Cpp = "C++";
 	var CppGCGen = "C++ (GC Gen)";
 	var Cppia = "Cppia";
+	var Cppiajit = "Cppiajit";
 	var Csharp = "C#";
 	var Hashlink = "HashLink";
 	var HashlinkC = "HashLink/C";
@@ -23,6 +24,7 @@ final allTargets:Array<Target> = [
 	Cpp,
 	CppGCGen,
 	Cppia,
+	Cppiajit,
 	Csharp,
 	Hashlink,
 	HashlinkC,
